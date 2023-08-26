@@ -9,7 +9,7 @@ export default function Footer() {
       <FooterLink href="/">
         <Home size={ICON_SIZE} />
       </FooterLink>
-      <FooterLink href="/login">
+      <FooterLink href="/sign-up">
         <User size={ICON_SIZE} />
       </FooterLink>
     </div>
