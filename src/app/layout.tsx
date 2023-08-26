@@ -28,7 +28,9 @@ export default function RootLayout({
             <div className="relative flex min-h-screen flex-col">
               <Navbar />
               <div className="flex-1">
-                <div className="container">{children}</div>
+                <div className="container pt-6 overflow-x-hidden">
+                  {children}
+                </div>
               </div>
             </div>
             {/* <Footer /> */}
