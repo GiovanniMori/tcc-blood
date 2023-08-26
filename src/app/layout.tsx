@@ -5,7 +5,7 @@ import { Inter } from "next/font/google"
 import Footer from "@/components/footer"
 import { ClerkProvider } from "@clerk/nextjs"
 import { ptBR } from "@clerk/localizations"
-import Navbar from "@/components/navbar"
+import Navbar from "@/components/navbar/navbar"
 import { useTheme } from "next-themes"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -26,8 +26,8 @@ export default function RootLayout({
         <body className={inter.className}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <Navbar />
-            {children}
-            <Footer />
+            <div className="sm:px-4 md:px-8">{children}</div>
+            {/* <Footer /> */}
           </ThemeProvider>
         </body>
       </html>
