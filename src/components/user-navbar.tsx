@@ -25,7 +25,7 @@ export default function UserNavbar() {
   }
 
   return (
-    <>
+    <div className="hidden sm:flex">
       {isSignedIn && (
         <>
           <Popover>
@@ -58,15 +58,15 @@ export default function UserNavbar() {
         </>
       )}
       {!isSignedIn && !user && (
-        <>
+        <div className=" gap-2 hidden md:flex">
           <Button variant="secondary" asChild>
             <Link href={"/sign-in"}>Entrar</Link>
           </Button>
           <Button variant="default" asChild>
             <Link href={"/sign-up"}>Cadastrar</Link>
           </Button>
-        </>
+        </div>
       )}
-    </>
+    </div>
   )
 }
