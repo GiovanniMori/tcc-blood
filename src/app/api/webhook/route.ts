@@ -1,10 +1,9 @@
-import type { IncomingHttpHeaders } from "http"
-import type { NextApiRequest, NextApiResponse } from "next"
-import type { WebhookRequiredHeaders } from "svix"
 import type { WebhookEvent } from "@clerk/nextjs/server"
 import { Webhook } from "svix"
 import { headers } from "next/headers"
+// import { PrismaClient } from "@prisma/client"
 
+// const prisma = new PrismaClient()
 const webhookSecret: string = process.env.WEBHOOK_SECRET || ""
 
 export async function POST(req: Request) {
@@ -39,10 +38,18 @@ export async function POST(req: Request) {
     })
   }
   const { id, object } = evt.data
-  console.log(evt.data)
+
   // Handle the webhook
   const eventType = evt.type
   if (eventType === "user.created") {
+    console.log(evt.data)
+    // await prisma.user.create({
+    //   data: {
+    //     name: evt.data.first_name,
+    //     id: evt.data.id,
+    //     email: evt.data.email_addresses[0].email_address,
+    //   },
+    // })
     console.log(`User ${id} was ${eventType}`)
   }
   return new Response("", {
