@@ -19,45 +19,46 @@ import { Separator } from "../ui/separator"
 
 export default function Navbar() {
   return (
-    <div className="px-6 py-3 flex items-center justify-between">
-      <Sheet>
-        <SheetTrigger className="flex md:hidden">
+    <header className="supports-backdrop-blur:bg-background/60 sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
+      <div className="container flex h-14 items-center justify-between">
+        <Sheet>
+          <SheetTrigger className="flex md:hidden">
+            <HeartHandshake />
+          </SheetTrigger>
+          <SheetContent side={"left"} className="flex flex-col gap-2">
+            <SheetHeader>
+              <SheetTitle className="flex gap-2 items-center">
+                <HeartHandshake />
+                BloodLink
+              </SheetTitle>
+            </SheetHeader>
+
+            <div className="px-8">
+              <NavbarLinks />
+              <UserNavbar />
+            </div>
+          </SheetContent>
+        </Sheet>
+        <Link href="/" className="hidden md:flex gap-2">
           <HeartHandshake />
-        </SheetTrigger>
-        <SheetContent side={"left"} className="flex flex-col gap-2">
-          <SheetHeader>
-            <SheetTitle className="flex gap-2 items-center">
-              <HeartHandshake />
-              BloodLink
-            </SheetTitle>
-          </SheetHeader>
-
-          <div className="px-8">
+          BloodLink
+        </Link>
+        <div className="flex items-center gap-10 ">
+          <div className="hidden md:flex">
             <NavbarLinks />
-            <UserNavbar />
           </div>
-        </SheetContent>
-      </Sheet>
-      <Link href="/" className="hidden md:flex gap-2">
-        <HeartHandshake />
-        BloodLink
-      </Link>
-      <div className="flex items-center gap-10 ">
-        <div className="hidden md:flex">
-          <NavbarLinks />
-        </div>
-
-        <div className="flex gap-2">
-          <UserNavbar />
-          <Button variant="outline" size="icon" asChild>
-            <Link href="https://github.com/GiovanniMori/tcc-blood">
-              <GithubIcon className="absolute h-[1.2rem] w-[1.2rem]" />
-              <span className="sr-only">Página no Github</span>
-            </Link>
-          </Button>
-          <ThemeModeToggle />
+          <div className="flex gap-2">
+            <UserNavbar />
+            <Button variant="outline" size="icon" asChild>
+              <Link href="https://github.com/GiovanniMori/tcc-blood">
+                <GithubIcon className="absolute h-[1.2rem] w-[1.2rem]" />
+                <span className="sr-only">Página no Github</span>
+              </Link>
+            </Button>
+            <ThemeModeToggle />
+          </div>
         </div>
       </div>
-    </div>
+    </header>
   )
 }

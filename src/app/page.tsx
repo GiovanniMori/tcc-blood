@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button"
 
 export default function Home() {
   return (
-    <main className="flex flex-col items-center justify-center gap-16 p-4 ">
+    <main className="flex flex-col items-center justify-center gap-16">
       <div className="flex gap-16 flex-wrap justify-center items-center">
         <motion.span
           initial={{ y: -100, opacity: 0 }}
