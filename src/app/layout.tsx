@@ -28,7 +28,7 @@ export default function RootLayout({
             <div className="relative flex min-h-screen flex-col">
               <Navbar />
               <div className="flex-1">
-                <div className="container pt-6 overflow-x-hidden">
+                <div className="container pt-6 overflow-x-hidden mb-8">
                   {children}
                 </div>
               </div>
