@@ -4,6 +4,15 @@
 
 @layer base {
   :root {
+    .cl-formButtonPrimary {
+      background-color: #dc2626 !important;
+    }
+    .cl-footerActionLink {
+      color: #dc2626 !important;
+    }
+    .cl-internal-b3fm6y {
+      background-color: #dc2626 !important;
+    }
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;

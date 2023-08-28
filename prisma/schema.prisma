@@ -30,6 +30,7 @@ model User {
   role             UserRole  @default(USER)
   gender           Gender
   lastDonationDate DateTime?
+  cpf              String    @unique
   isEligible       Boolean   @default(true)
 }
 
