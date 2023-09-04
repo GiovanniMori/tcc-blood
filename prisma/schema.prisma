@@ -21,17 +21,38 @@ enum Gender {
 }
 
 model User {
-  id               String    @unique
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-  email            String    @unique
-  name             String    @db.VarChar(255)
-  points           Int       @default(0)
-  role             UserRole  @default(USER)
+  id               String        @unique
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  email            String        @unique
+  name             String        @db.VarChar(255)
+  points           Int           @default(0)
+  role             UserRole      @default(USER)
   gender           Gender
   lastDonationDate DateTime?
-  cpf              String    @unique
-  isEligible       Boolean   @default(true)
+  cpf              String        @unique
+  isEligible       Boolean       @default(true)
+  UserMission      UserMission[]
+}
+
+model Mission {
+  id          String        @id @default(uuid())
+  title       String
+  description String
+  points      Int
+  UserMission UserMission[]
+}
+
+model UserMission {
+  id        String  @id @default(uuid())
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+  mission   Mission @relation(fields: [missionId], references: [id])
+  missionId String
+  completed Boolean @default(false)
+
+  @@index([userId])
+  @@index([missionId])
 }
 
 enum BloodType {
