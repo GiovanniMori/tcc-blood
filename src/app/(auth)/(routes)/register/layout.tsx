@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation"
-import { useDbUser } from "@/hooks/useDbUser"
+import { useDbUser } from "@/hooks/server/useDbUser"
 
 export default async function RootLayout({
   children,

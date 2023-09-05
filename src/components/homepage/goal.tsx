@@ -14,7 +14,7 @@ function Goal() {
         Nossa meta
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 justify-center items-center gap-8">
-        <div className="flex flex-col gap-16">
+        <div className="flex flex-col gap-16 order-0 md:order-1">
           <GoalCard
             icon={<IoIosStats />}
             title="Aumentar a taxa de doação"
