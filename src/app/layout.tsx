@@ -6,7 +6,9 @@ import Footer from "@/components/footer"
 import { ClerkProvider } from "@clerk/nextjs"
 import { ptBR } from "@clerk/localizations"
 import Navbar from "@/components/navbar/navbar"
-import { useTheme } from "next-themes"
+
+import ReactQueryProvider from "@/providers/react-query"
+import { UserContextProvider } from "@/contexts/UserContext"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -21,22 +23,30 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider localization={ptBR}>
-      <html lang="pt-BR" suppressHydrationWarning>
-        <body className={inter.className}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <div className="relative flex min-h-screen flex-col">
-              <Navbar />
-              <div className="flex-1">
-                <div className="container pt-6 overflow-x-hidden mb-8">
-                  {children}
+    <html lang="pt-BR" suppressHydrationWarning>
+      <body className={inter.className}>
+        <ClerkProvider localization={ptBR}>
+          <ReactQueryProvider>
+            <UserContextProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+              >
+                <div className="relative flex min-h-screen flex-col">
+                  <Navbar />
+                  <div className="flex-1">
+                    <div className="container pt-6 overflow-x-hidden mb-8">
+                      {children}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            {/* <Footer /> */}
-          </ThemeProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+                {/* <Footer /> */}
+              </ThemeProvider>
+            </UserContextProvider>
+          </ReactQueryProvider>
+        </ClerkProvider>
+      </body>
+    </html>
   )
 }
