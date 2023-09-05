@@ -29,21 +29,27 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { useUser } from "@clerk/nextjs"
-import { useEffect } from "react"
+import axios from "axios"
+import { useRouter } from "next/navigation"
 
 export default function Page() {
-  const { isSignedIn, user, isLoaded } = useUser()
+  const router = useRouter()
   const form = useForm<userSchema>({
     resolver: zodResolver(userSchema),
-    defaultValues: {
-      name: user?.firstName || "",
-      // gender: `PREFER_NOT_TO_SAY`,
-    },
+    defaultValues: {},
   })
+
   function handleFinishRegister(data: userSchema) {
-    console.log("entrei")
-    console.log(data)
+    axios
+      .post("/api/user", data)
+      .then((response) => {
+        router.refresh()
+        // do something with the response
+      })
+      .catch((error) => {
+        console.log(error)
+        // handle the error
+      })
   }
   // useEffect(() => {
   //   form.setValue("name", user?.firstName || "")
@@ -51,7 +57,7 @@ export default function Page() {
   console.log(form.formState.errors)
 
   return (
-    <Card className="w-[500px]">
+    <Card className="w-[50vw]">
       <CardHeader>
         <CardTitle>Finalização do cadastro</CardTitle>
         <CardDescription className="">
@@ -150,7 +156,6 @@ export default function Page() {
                         </SelectContent>
                       </Select>
                     </FormControl>
-
                     <FormMessage />
                   </FormItem>
                 )}
