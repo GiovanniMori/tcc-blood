@@ -58,7 +58,7 @@ export default function Register() {
   console.log(form.formState.errors)
 
   return (
-    <Card className="w-[50vw]">
+    <Card className="md:w-[75vw] lg:w-[45vw]">
       <CardHeader>
         <CardTitle>Finalização do cadastro</CardTitle>
         <CardDescription className="">
@@ -73,7 +73,7 @@ export default function Register() {
             onSubmit={form.handleSubmit(handleFinishRegister)}
             className="flex flex-col gap-6 "
           >
-            <div className="grid grid-cols-2  gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
               <FormField
                 control={form.control}
                 name="name"

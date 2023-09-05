@@ -3,8 +3,10 @@ import { motion } from "framer-motion"
 import colors from "tailwindcss/colors"
 import { Button } from "../ui/button"
 import Link from "next/link"
+import { useDbUser } from "@/hooks/useDbUser"
 
 function FirstSection() {
+  const user = useDbUser()
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 justify-center items-center">
       <motion.span
@@ -27,12 +29,21 @@ function FirstSection() {
           </div>
         </div>
         <div className="flex w-full items-center justify-center space-x-4 pb-8 pt-4 md:pb-10">
-          <Button variant="secondary" asChild>
-            <Link href={"/sign-in"}>Entrar</Link>
-          </Button>
-          <Button variant="default" asChild>
-            <Link href={"/sign-up"}>Cadastrar</Link>
-          </Button>
+          {user ? (
+            <Button variant="default" asChild>
+              <Link href={"/doar"}>Fazer minha primaira doação</Link>
+            </Button>
+          ) : (
+            <>
+              {" "}
+              <Button variant="secondary" asChild>
+                <Link href={"/sign-in"}>Entrar</Link>
+              </Button>
+              <Button variant="default" asChild>
+                <Link href={"/sign-up"}>Cadastrar</Link>
+              </Button>
+            </>
+          )}
         </div>
       </motion.span>
       <motion.svg

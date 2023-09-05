@@ -1,23 +1,8 @@
-import { auth } from "@clerk/nextjs"
-import { PrismaClient } from "@prisma/client"
+"use client"
+import { UserContext } from "@/contexts/UserContext"
+import { useContext } from "react"
 
-const prisma = new PrismaClient()
-
-export async function useDbUser() {
-  const { userId } = auth()
-
-  if (!userId) {
-    return null
-  }
-
-  try {
-    const dbUser = await prisma.user.findUniqueOrThrow({
-      where: {
-        id: userId,
-      },
-    })
-    return dbUser
-  } catch {
-    return false
-  }
+export function useDbUser() {
+  const value = useContext(UserContext)
+  return value
 }
