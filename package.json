@@ -65,6 +65,7 @@
     "react-hook-form": "^7.45.4",
     "react-icons": "^4.10.1",
     "react-parallax-tilt": "^1.7.163",
+    "recharts": "^2.8.0",
     "svix": "^1.8.1",
     "tailwind-merge": "^1.14.0",
     "tailwindcss": "3.3.3",
