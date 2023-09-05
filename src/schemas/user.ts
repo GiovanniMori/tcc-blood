@@ -12,7 +12,6 @@ const GenderEnum = z.enum(["MALE", "FEMALE", "PREFER_NOT_TO_SAY"], {
 })
 
 export const userSchema = z.object({
-  id: z.string({ required_error: required_msg }),
   name: z.string({ required_error: required_msg }),
   cpf: z
     .string({ required_error: required_msg })

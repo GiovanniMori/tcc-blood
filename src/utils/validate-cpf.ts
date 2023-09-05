@@ -1,40 +1,46 @@
-export function validateCPF(cpf: string): boolean {
-  // Remover caracteres não numéricos do CPF
-  cpf = cpf.replace(/\D/g, "")
+export function validateCPF(cpf: string) {
+  cpf = cpf.replace(/[^\d]+/g, "")
 
-  // Verificar se o CPF tem 11 dígitos
   if (cpf.length !== 11) {
     return false
   }
 
-  // Verificar se todos os dígitos são iguais (caso inválido, mas não verificamos aqui)
-  const areAllDigitsEqual = Array.from(cpf).every((digit) => digit === cpf[0])
-  if (areAllDigitsEqual) {
+  if (/^(\d)\1{10}$/.test(cpf)) {
     return false
   }
 
-  // Calcular os dígitos verificadores
-  const cpfArray = Array.from(cpf, Number)
-  const firstVerifier = calculateVerifier(cpfArray.slice(0, 9))
-  const secondVerifier = calculateVerifier([
-    ...cpfArray.slice(0, 9),
-    firstVerifier,
-  ])
+  let sum = 0
+  let remainder
 
-  // Verificar se os dígitos verificadores coincidem
-  if (cpfArray[9] !== firstVerifier || cpfArray[10] !== secondVerifier) {
+  for (let i = 1; i <= 9; i++) {
+    sum += parseInt(cpf.substring(i - 1, i)) * (11 - i)
+  }
+
+  remainder = (sum * 10) % 11
+
+  if (remainder === 10 || remainder === 11) {
+    remainder = 0
+  }
+
+  if (remainder !== parseInt(cpf.substring(9, 10))) {
+    return false
+  }
+
+  sum = 0
+
+  for (let i = 1; i <= 10; i++) {
+    sum += parseInt(cpf.substring(i - 1, i)) * (12 - i)
+  }
+
+  remainder = (sum * 10) % 11
+
+  if (remainder === 10 || remainder === 11) {
+    remainder = 0
+  }
+
+  if (remainder !== parseInt(cpf.substring(10, 11))) {
     return false
   }
 
   return true
-}
-
-function calculateVerifier(digits: number[]): number {
-  const weights = [10, 9, 8, 7, 6, 5, 4, 3, 2]
-  const sum = digits.reduce(
-    (acc, digit, index) => acc + digit * weights[index],
-    0
-  )
-  const remainder = sum % 11
-  return remainder < 2 ? 0 : 11 - remainder
 }
