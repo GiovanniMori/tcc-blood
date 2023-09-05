@@ -65,6 +65,7 @@
     "react-dom": "18.2.0",
     "react-hook-form": "^7.45.4",
     "react-icons": "^4.10.1",
+    "react-loader-spinner": "^5.4.5",
     "react-parallax-tilt": "^1.7.163",
     "recharts": "^2.8.0",
     "svix": "^1.8.1",
