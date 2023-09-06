@@ -20,18 +20,39 @@ enum Gender {
   PREFER_NOT_TO_SAY
 }
 
+model Hemocenter {
+  id          String        @id @default(uuid())
+  name        String
+  address     String
+  appointment Appointment[]
+}
+
+model Appointment {
+  id           String     @id @default(uuid())
+  user         User       @relation(fields: [userId], references: [id])
+  userId       String
+  hemocenter   Hemocenter @relation(fields: [hemocenterId], references: [id])
+  hemocenterId String
+  date         DateTime
+
+  @@index([hemocenterId])
+  @@index([userId])
+}
+
 model User {
-  id               String    @unique
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-  email            String    @unique
-  name             String    @db.VarChar(255)
-  points           Int       @default(0)
-  role             UserRole  @default(USER)
+  id               String        @unique
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  email            String        @unique
+  name             String        @db.VarChar(255)
+  points           Int           @default(0)
+  role             UserRole      @default(USER)
   gender           Gender
   lastDonationDate DateTime?
-  cpf              String    @unique
-  isEligible       Boolean   @default(true)
+  bloodType        BloodType     @default(UKNOWN)
+  cpf              String        @unique
+  isEligible       Boolean       @default(true)
+  appointments     Appointment[]
 }
 
 enum BloodType {
@@ -42,4 +63,5 @@ enum BloodType {
   AB_POSITIVE
   AB_NEGATIVE
   O_POSITIVE
+  UKNOWN
 }

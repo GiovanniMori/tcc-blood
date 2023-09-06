@@ -9,6 +9,7 @@ import Navbar from "@/components/navbar/navbar"
 
 import ReactQueryProvider from "@/providers/react-query"
 import { UserContextProvider } from "@/contexts/UserContext"
+import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -43,6 +44,7 @@ export default function RootLayout({
                 </div>
                 {/* <Footer /> */}
               </ThemeProvider>
+              <Toaster />
             </UserContextProvider>
           </ReactQueryProvider>
         </ClerkProvider>
