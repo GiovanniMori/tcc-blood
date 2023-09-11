@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/select"
 
 import { Input } from "@/components/ui/input"
-import { userSchema } from "@/schemas/user"
+import { registerSchema } from "@/schemas/register"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
@@ -35,12 +35,12 @@ import { useRouter } from "next/navigation"
 
 export default function Register() {
   const router = useRouter()
-  const form = useForm<userSchema>({
-    resolver: zodResolver(userSchema),
+  const form = useForm<registerSchema>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {},
   })
 
-  function handleFinishRegister(data: userSchema) {
+  function handleFinishRegister(data: registerSchema) {
     axios
       .post("/api/user", data)
       .then((response) => {

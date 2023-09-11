@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server"
 import { auth, currentUser } from "@clerk/nextjs"
-import { PrismaClient } from "@prisma/client"
+import prisma from "@/lib/prisma"
 import { redirect } from "next/navigation"
 
-const prisma = new PrismaClient()
 export const dynamic = "force-dynamic"
 
 export async function GET() {

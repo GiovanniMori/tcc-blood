@@ -1,9 +1,7 @@
 import type { WebhookEvent } from "@clerk/nextjs/server"
 import { Webhook } from "svix"
 import { headers } from "next/headers"
-// import { PrismaClient } from "@prisma/client"
 
-// const prisma = new PrismaClient()
 const webhookSecret: string = process.env.WEBHOOK_SECRET || ""
 
 export async function POST(req: Request) {

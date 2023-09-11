@@ -1,13 +1,12 @@
 import { MainNav } from "./components/main-nav"
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
-import { PrismaClient } from "@prisma/client"
+import prisma from "@/lib/prisma"
 import { currentUser } from "@clerk/nextjs/server"
 
 export const dynamic = "force-dynamic"
 export const revalidate = 0
 
-const prisma = new PrismaClient()
 // use `prisma` in your application to read and write data in your DB
 export default async function RootLayout({
   children,

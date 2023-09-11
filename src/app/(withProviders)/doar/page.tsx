@@ -12,9 +12,8 @@ import Goal from "@/components/homepage/goal"
 import { Donate } from "@/components/donate"
 import { Booking } from "@/components/booking"
 import { useDbUser } from "@/hooks/server/useDbUser"
-import { PrismaClient } from "@prisma/client"
+import prisma from "@/lib/prisma"
 import { auth } from "@clerk/nextjs/server"
-const prisma = new PrismaClient()
 
 export default async function Home() {
   const { userId } = auth()

@@ -1,17 +1,16 @@
 import { NextResponse } from "next/server"
 import { auth } from "@clerk/nextjs"
-import { PrismaClient } from "@prisma/client"
-import { userSchema } from "@/schemas/user"
+import prisma from "@/lib/prisma"
+import { registerSchema } from "@/schemas/register"
 import { currentUser } from "@clerk/nextjs/server"
 
-const prisma = new PrismaClient()
 export const dynamic = "force-dynamic"
 
 export async function POST(request: Request) {
   try {
     const { userId } = auth()
     const user = await currentUser()
-    const data = userSchema.parse(await request.json())
+    const data = registerSchema.parse(await request.json())
     if (!userId) {
       return new Response("Unauthorized", { status: 401 })
     }
