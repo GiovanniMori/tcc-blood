@@ -1,6 +1,7 @@
 "use client";
 import { ArrowUpDown } from "lucide-react";
 
+import Confetti from "react-confetti";
 import {
   Select,
   SelectContent,
@@ -230,6 +231,8 @@ export function DataTable() {
   }
   return (
     <div className="space-y-4">
+      <Confetti />
+
       <DataTableToolbar table={table} />
       <div className="rounded-md border">
         <Table>

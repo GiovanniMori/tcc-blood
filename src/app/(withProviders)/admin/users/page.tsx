@@ -5,7 +5,6 @@ import { Metadata } from "next";
 import { currentUser } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
 import { useParams, usePathname, useSearchParams } from "next/navigation";
-
 export const metadata: Metadata = {
   title: "Clientes",
   description: "A task and issue tracker build using Tanstack Table.",
