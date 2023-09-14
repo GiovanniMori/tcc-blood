@@ -39,7 +39,6 @@ export default function RootLayout({
                   <div className="flex-1">
                     <div className="container pt-6 overflow-x-hidden mb-8">
                       oi
-                      {children}
                     </div>
                   </div>
                 </div>
