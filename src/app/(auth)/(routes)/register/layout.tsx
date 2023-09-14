@@ -1,16 +1,15 @@
-import { redirect } from "next/navigation"
-import { useDbUser } from "@/hooks/server/useDbUser"
+import { getUser } from "@/service/user";
+import { redirect } from "next/navigation";
 
 export default async function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  const user = await useDbUser()
+  const user = await getUser();
 
   if (user) {
-    user && redirect("/")
+    !user && redirect("/register");
   }
-
-  return <>{children}</>
+  return <>{children}</>;
 }
