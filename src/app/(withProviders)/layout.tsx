@@ -9,7 +9,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // const user = await currentUser();
+  const user = await currentUser();
   // const userDb = await prisma.user.findUnique({
   //   where: {
   //     id: user?.id,
