@@ -27,20 +27,19 @@ export default function RootLayout({
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={inter.className}>
         <ClerkProvider localization={ptBR}>
-          <UserContextProvider>
+          <ReactQueryProvider>
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
               <div className="relative flex min-h-screen flex-col">
-                <Navbar />
                 <div className="flex-1">
                   <div className="container pt-6 overflow-x-hidden mb-8">
-                    oi
+                    {children}
                   </div>
                 </div>
               </div>
               {/* <Footer /> */}
             </ThemeProvider>
             <Toaster />
-          </UserContextProvider>
+          </ReactQueryProvider>
         </ClerkProvider>
       </body>
     </html>
