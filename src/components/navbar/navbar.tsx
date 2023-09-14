@@ -1,11 +1,10 @@
-"use client"
-import { GithubIcon, HeartHandshake } from "lucide-react"
-import Link from "next/link"
-import React from "react"
-import { Button } from "../ui/button"
-import { ThemeModeToggle } from "../theme-mode-toggle"
-import { SignedIn, SignedOut } from "@clerk/nextjs"
-import UserNavbar from "../user-navbar"
+import { GithubIcon, HeartHandshake } from "lucide-react";
+import Link from "next/link";
+import React from "react";
+import { Button } from "../ui/button";
+import { ThemeModeToggle } from "../theme-mode-toggle";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
+import UserNavbar from "../user-navbar";
 import {
   Sheet,
   SheetContent,
@@ -13,9 +12,9 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet"
-import NavbarLinks from "./navbar-links"
-import { Separator } from "../ui/separator"
+} from "@/components/ui/sheet";
+import NavbarLinks from "./navbar-links";
+import { Separator } from "../ui/separator";
 
 export default function Navbar() {
   return (
@@ -32,7 +31,6 @@ export default function Navbar() {
                 BloodLink
               </SheetTitle>
             </SheetHeader>
-
             <div className="px-8">
               <NavbarLinks />
               <UserNavbar />
@@ -60,5 +58,5 @@ export default function Navbar() {
         </div>
       </div>
     </header>
-  )
+  );
 }

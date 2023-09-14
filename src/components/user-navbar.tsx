@@ -5,59 +5,47 @@ import {
   currentUser,
   useClerk,
   useUser,
-} from "@clerk/nextjs"
-import React from "react"
-import { Button } from "./ui/button"
-import Link from "next/link"
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
+} from "@clerk/nextjs";
+import React from "react";
+import { Button } from "./ui/button";
+import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
+import prisma from "@/lib/prisma";
+import { getUser } from "@/service/user";
 
-export default function UserNavbar() {
-  const { signOut } = useClerk()
-  const { isSignedIn, user, isLoaded } = useUser()
-
-  if (!isLoaded) {
-    return <>Carregando...</>
-  }
-
+export default async function UserNavbar() {
+  const user = await getUser();
   return (
     <div className="hidden sm:flex">
-      {isSignedIn && (
+      {user && (
         <>
           <Popover>
             <PopoverTrigger>
               <Avatar>
-                <AvatarImage src={user?.imageUrl} />
-                <AvatarFallback>
-                  {user?.firstName ? user.firstName[0] : ""}
-                </AvatarFallback>
+                <AvatarImage src={user!.name} />
+                <AvatarFallback>{user!.name}</AvatarFallback>
               </Avatar>
             </PopoverTrigger>
             <PopoverContent>
               <div className="grid gap-4">
                 <div className="space-y-2">
-                  <h4 className="font-medium leading-none">
-                    {user?.firstName}
-                  </h4>
-                  <p className="text-sm text-muted-foreground">
-                    {user?.emailAddresses[0].emailAddress}
-                  </p>
+                  <h4 className="font-medium leading-none">{user!.name}</h4>
+                  <p className="text-sm text-muted-foreground">{user!.email}</p>
                 </div>
                 <div className="grid gap-2">
-                  <Button variant="default" onClick={() => signOut()}>
-                    Sair
-                  </Button>
+                  <Button variant="default">Sair</Button>
                 </div>
               </div>
             </PopoverContent>
           </Popover>
         </>
       )}
-      {!isSignedIn && !user && (
+      {!user && (
         <div className=" gap-2 hidden md:flex">
           <Button variant="secondary" asChild>
             <Link href={"/sign-in"}>Entrar</Link>
@@ -68,5 +56,5 @@ export default function UserNavbar() {
         </div>
       )}
     </div>
-  )
+  );
 }

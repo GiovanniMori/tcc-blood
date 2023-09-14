@@ -10,6 +10,7 @@ generator client {
 
 enum UserRole {
   ADMIN
+  MOD
   USER
   SPONSOR
 }
@@ -53,6 +54,14 @@ model User {
   cpf              String        @unique
   isEligible       Boolean       @default(true)
   appointments     Appointment[]
+}
+
+model SponsorShip {
+  id           String @id @default(uuid())
+  name         String
+  image        String
+  points       Int
+  descriptions String
 }
 
 enum BloodType {

@@ -151,3 +151,12 @@ export function Donate() {
     </div>
   )
 }
+
+interface Terms{
+  name: string
+}
+export default function Terms() {
+  return (
+    <div>donate</div>
+  )
+}

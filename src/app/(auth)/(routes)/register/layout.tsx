@@ -6,10 +6,11 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // const user = await getUser();
+  const user = await getUser();
 
-  // if (user) {
-  //   !user && redirect("/register");
-  // }
+  if (user) {
+    user && redirect("/");
+  }
+
   return <>{children}</>;
 }
