@@ -15,8 +15,8 @@ export default async function RootLayout({
       id: user?.id,
     },
   });
-  if (userDb) {
-    !userDb && redirect("/register");
-  }
+  // if (userDb) {
+  //   !userDb && redirect("/register");
+  // }
   return <>{children}</>;
 }
