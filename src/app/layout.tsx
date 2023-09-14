@@ -28,17 +28,24 @@ export default function RootLayout({
       <body className={inter.className}>
         <ClerkProvider localization={ptBR}>
           <ReactQueryProvider>
-            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-              <div className="relative flex min-h-screen flex-col">
-                <div className="flex-1">
-                  <div className="container pt-6 overflow-x-hidden mb-8">
-                    {children}
+            <UserContextProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+              >
+                <div className="relative flex min-h-screen flex-col">
+                  <Navbar />
+                  <div className="flex-1">
+                    <div className="container pt-6 overflow-x-hidden mb-8">
+                      {children}
+                    </div>
                   </div>
                 </div>
-              </div>
-              {/* <Footer /> */}
-            </ThemeProvider>
-            <Toaster />
+                {/* <Footer /> */}
+              </ThemeProvider>
+              <Toaster />
+            </UserContextProvider>
           </ReactQueryProvider>
         </ClerkProvider>
       </body>

@@ -9,15 +9,15 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await currentUser();
-  const userDb = await prisma.user.findUniqueOrThrow({
-    where: {
-      id: user?.id,
-    },
-  });
+  // const user = await currentUser();
+  // const userDb = await prisma.user.findUniqueOrThrow({
+  //   where: {
+  //     id: user?.id,
+  //   },
+  // });
 
-  if (userDb) {
-    !user && redirect("/register");
-  }
+  // if (userDb) {
+  //   !user && redirect("/register");
+  // }
   return <>{children}</>;
 }
