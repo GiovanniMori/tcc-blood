@@ -16,36 +16,26 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import prisma from "@/lib/prisma";
+import { getUser } from "@/service/user";
 
 export default async function UserNavbar() {
-  const user = await currentUser();
-  const userDb = await prisma.user.findUniqueOrThrow({
-    where: {
-      id: user?.id,
-    },
-  });
+  const user = await getUser();
   return (
     <div className="hidden sm:flex">
-      {userDb && (
+      {user && (
         <>
           <Popover>
             <PopoverTrigger>
               <Avatar>
-                <AvatarImage src={user?.imageUrl} />
-                <AvatarFallback>
-                  {user?.firstName ? user.firstName[0] : ""}
-                </AvatarFallback>
+                <AvatarImage src={user!.name} />
+                <AvatarFallback>{user!.name}</AvatarFallback>
               </Avatar>
             </PopoverTrigger>
             <PopoverContent>
               <div className="grid gap-4">
                 <div className="space-y-2">
-                  <h4 className="font-medium leading-none">
-                    {user?.firstName}
-                  </h4>
-                  <p className="text-sm text-muted-foreground">
-                    {user?.emailAddresses[0].emailAddress}
-                  </p>
+                  <h4 className="font-medium leading-none">{user!.name}</h4>
+                  <p className="text-sm text-muted-foreground">{user!.email}</p>
                 </div>
                 <div className="grid gap-2">
                   <Button variant="default">Sair</Button>

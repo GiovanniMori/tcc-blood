@@ -1,19 +1,15 @@
 import prisma from "@/lib/prisma";
+import { getUser } from "@/service/user";
 import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
 import React from "react";
 
 export default async function NavbarLinks() {
-  const user = await currentUser();
-  const userDb = await prisma.user.findUniqueOrThrow({
-    where: {
-      id: user?.id,
-    },
-  });
+  const user = await getUser();
 
   return (
     <div className="flex gap-4">
-      {userDb.role === "ADMIN" && (
+      {user!.role === "ADMIN" && (
         <>
           <Link
             href="/admin"
