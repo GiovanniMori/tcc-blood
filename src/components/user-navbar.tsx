@@ -5,28 +5,28 @@ import {
   currentUser,
   useClerk,
   useUser,
-} from "@clerk/nextjs"
-import React from "react"
-import { Button } from "./ui/button"
-import Link from "next/link"
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
+} from "@clerk/nextjs";
+import React from "react";
+import { Button } from "./ui/button";
+import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
+import prisma from "@/lib/prisma";
 
-export default function UserNavbar() {
-  const { signOut } = useClerk()
-  const { isSignedIn, user, isLoaded } = useUser()
-
-  if (!isLoaded) {
-    return <>Carregando...</>
-  }
-
+export default async function UserNavbar() {
+  const user = await currentUser();
+  const userDb = await prisma.user.findUniqueOrThrow({
+    where: {
+      id: user?.id,
+    },
+  });
   return (
     <div className="hidden sm:flex">
-      {isSignedIn && (
+      {userDb && (
         <>
           <Popover>
             <PopoverTrigger>
@@ -48,16 +48,14 @@ export default function UserNavbar() {
                   </p>
                 </div>
                 <div className="grid gap-2">
-                  <Button variant="default" onClick={() => signOut()}>
-                    Sair
-                  </Button>
+                  <Button variant="default">Sair</Button>
                 </div>
               </div>
             </PopoverContent>
           </Popover>
         </>
       )}
-      {!isSignedIn && !user && (
+      {!user && (
         <div className=" gap-2 hidden md:flex">
           <Button variant="secondary" asChild>
             <Link href={"/sign-in"}>Entrar</Link>
@@ -68,5 +66,5 @@ export default function UserNavbar() {
         </div>
       )}
     </div>
-  )
+  );
 }

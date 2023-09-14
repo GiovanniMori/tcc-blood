@@ -1,31 +1,25 @@
-import { MainNav } from "./components/main-nav"
-import { cookies } from "next/headers"
-import { redirect } from "next/navigation"
-import prisma from "@/lib/prisma"
-import { currentUser } from "@clerk/nextjs/server"
+import { MainNav } from "./components/main-nav";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import prisma from "@/lib/prisma";
+import { currentUser } from "@clerk/nextjs/server";
 
-export const dynamic = "force-dynamic"
-export const revalidate = 0
+export const dynamic = "force-dynamic";
 
-// use `prisma` in your application to read and write data in your DB
 export default async function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  const user = await currentUser()
-  const userDb = await prisma.user.findUnique({
+  const user = await currentUser();
+  const userDb = await prisma.user.findUniqueOrThrow({
     where: {
       id: user?.id,
     },
-  })
-  console.log(user?.id)
+  });
 
-  if (userDb?.role === "ADMIN") {
-    // User is an admin
-  } else {
-    redirect("/")
-    // User is not an admin
+  if (userDb.role !== "ADMIN") {
+    redirect("/");
   }
   return (
     <div>
@@ -36,5 +30,5 @@ export default async function RootLayout({
       </div>
       <div className="flex-1 space-y-4 p-8 pt-6">{children}</div>
     </div>
-  )
+  );
 }

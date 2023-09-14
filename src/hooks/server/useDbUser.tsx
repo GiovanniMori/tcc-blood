@@ -1,11 +1,11 @@
-import { auth } from "@clerk/nextjs"
-import prisma from "@/lib/prisma"
+import { auth } from "@clerk/nextjs";
+import prisma from "@/lib/prisma";
 
 export async function useDbUser() {
-  const { userId } = auth()
+  const { userId } = auth();
 
   if (!userId) {
-    return null
+    return null;
   }
 
   try {
@@ -13,9 +13,9 @@ export async function useDbUser() {
       where: {
         id: userId,
       },
-    })
-    return dbUser
+    });
+    return dbUser;
   } catch {
-    return false
+    return false;
   }
 }

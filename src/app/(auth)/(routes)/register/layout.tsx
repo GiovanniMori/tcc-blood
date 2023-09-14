@@ -1,16 +1,22 @@
-import { redirect } from "next/navigation"
-import { useDbUser } from "@/hooks/server/useDbUser"
+import prisma from "@/lib/prisma";
+import { currentUser } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
 export default async function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  const user = await useDbUser()
+  const user = await currentUser();
+  const userDb = await prisma.user.findUniqueOrThrow({
+    where: {
+      id: user?.id,
+    },
+  });
 
-  if (user) {
-    user && redirect("/")
+  if (userDb) {
+    user && redirect("/");
   }
 
-  return <>{children}</>
+  return <>{children}</>;
 }
