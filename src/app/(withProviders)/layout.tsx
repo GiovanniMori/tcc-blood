@@ -1,8 +1,9 @@
-import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { getUser } from "@/service/user";
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 
 export default async function RootLayout({
   children,
@@ -18,5 +19,10 @@ export default async function RootLayout({
   // if (userDb) {
   //   !userDb && redirect("/register");
   // }
-  return <>{children}</>;
+  return (
+    <>
+      {user && <>oi </>}
+      {children}
+    </>
+  );
 }
