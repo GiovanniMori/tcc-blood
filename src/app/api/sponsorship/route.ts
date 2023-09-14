@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs";
 import prisma from "@/lib/prisma";
 import { registerSchema } from "@/schemas/register";
-import { useDbUser } from "@/hooks/server/useDbUser";
 
 export async function POST(request: Request) {
   try {
