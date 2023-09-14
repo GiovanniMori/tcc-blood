@@ -11,19 +11,18 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const user = await currentUser();
-  try {
+  if (user) {
     const userDb = await prisma.user.findUnique({
       where: {
-        id: user?.id,
+        id: user.id,
       },
     });
-  } catch (error: any) {
-    console.log("erro catch", error);
+
+    if (userDb) {
+      !userDb && redirect("/register");
+    }
   }
 
-  // if (userDb) {
-  //   !userDb && redirect("/register");
-  // }
   return (
     <>
       {user && <>oi </>}
