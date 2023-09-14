@@ -9,7 +9,7 @@ export default async function NavbarLinks() {
 
   return (
     <div className="flex gap-4">
-      {user!.role === "ADMIN" && (
+      {user?.role === "ADMIN" && (
         <>
           <Link
             href="/admin"
