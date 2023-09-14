@@ -9,7 +9,7 @@ export default async function RootLayout({
   const user = await getUser();
 
   if (user) {
-    user && redirect("/");
+    redirect("/");
   }
 
   return <>{children}</>;

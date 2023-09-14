@@ -11,8 +11,8 @@ export default async function RootLayout({
 }) {
   const user = await getUser();
 
-  if (user) {
-    !user && redirect("/register");
+  if (!user) {
+    redirect("/register");
   }
 
   return <>{children}</>;

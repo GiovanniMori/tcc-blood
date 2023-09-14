@@ -9,10 +9,10 @@ export default async function NavbarLinks() {
 
   return (
     <div className="flex gap-4">
-      {user?.role === "ADMIN" && (
+      {user && user.role === "ADMIN" && (
         <>
           <Link
-            href="/admin"
+            href="/sponsor"
             className="text-sm font-medium transition-colors hover:text-primary"
           >
             Patrocinadores

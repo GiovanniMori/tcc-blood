@@ -5,12 +5,16 @@ import { User } from "@prisma/client";
 export async function getUser(): Promise<User | null> {
   const user = await currentUser();
   if (user) {
-    const userDb = await prisma.user.findUniqueOrThrow({
-      where: {
-        id: user.id,
-      },
-    });
-    return userDb;
+    try {
+      const userDb = await prisma.user.findUniqueOrThrow({
+        where: {
+          id: user.id,
+        },
+      });
+      return userDb;
+    } catch {
+      return null;
+    }
   }
 
   return null;
