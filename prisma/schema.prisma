@@ -43,13 +43,13 @@ model Appointment {
 model User {
   id               String        @unique
   createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
+  updatedAt        DateTime      @default(now())
   email            String        @unique
   name             String        @db.VarChar(255)
   points           Int           @default(0)
   role             UserRole      @default(USER)
   gender           Gender
-  lastDonationDate DateTime?
+  lastDonationDate DateTime?     @map("last_donation_date")
   bloodType        BloodType     @default(UKNOWN)
   cpf              String        @unique
   isEligible       Boolean       @default(true)
@@ -57,11 +57,11 @@ model User {
 }
 
 model SponsorShip {
-  id           String @id @default(uuid())
-  name         String
-  image        String
-  points       Int
-  descriptions String
+  id          String @id @default(uuid())
+  name        String
+  image       String
+  points      Int
+  description String @db.LongText()
 }
 
 enum BloodType {

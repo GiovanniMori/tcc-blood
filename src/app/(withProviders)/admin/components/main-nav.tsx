@@ -1,6 +1,6 @@
-import Link from "next/link"
+import Link from "next/link";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 export function MainNav({
   className,
@@ -18,29 +18,29 @@ export function MainNav({
         Visão Geral
       </Link>
       <Link
-        href="/admin/clientes"
+        href="/admin/users"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
-        Clientes
+        Doadores
       </Link>
       <Link
-        href="/admin/funcionarios"
+        href="/admin/sponsors"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
-        Funcionários
+        Patrocinadores
       </Link>
       <Link
-        href="/admin/estoque"
+        href="/admin/products"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
-        Estoque
+        Produtos
       </Link>
       <Link
-        href="/admin/configuracoes"
+        href="/admin/hemocenters"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
-        Configurações
+        Hemocentros
       </Link>
     </nav>
-  )
+  );
 }
