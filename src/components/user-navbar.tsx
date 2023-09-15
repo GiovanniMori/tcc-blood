@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/popover";
 import prisma from "@/lib/prisma";
 import { getUser } from "@/service/user";
+import { Separator } from "./ui/separator";
 
 export default async function UserNavbar() {
   const user = await getUser();
@@ -28,7 +29,7 @@ export default async function UserNavbar() {
             <PopoverTrigger>
               <Avatar>
                 <AvatarImage src={user!.name} />
-                <AvatarFallback>{user!.name}</AvatarFallback>
+                <AvatarFallback>{user!.name[0]}</AvatarFallback>
               </Avatar>
             </PopoverTrigger>
             <PopoverContent>
@@ -37,6 +38,9 @@ export default async function UserNavbar() {
                   <h4 className="font-medium leading-none">{user!.name}</h4>
                   <p className="text-sm text-muted-foreground">{user!.email}</p>
                 </div>
+                <Link href={"/conta"}>Perfil</Link>
+                <Link href={"/conta/cupons"}>Cupons</Link>
+                <Separator />
                 <div className="grid gap-2">
                   <Button variant="default">Sair</Button>
                 </div>

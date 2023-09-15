@@ -1,22 +1,26 @@
-import { Separator } from "@/components/ui/separator"
-import { Metadata } from "next"
-import Image from "next/image"
-import { SidebarNav } from "./components/sidebar-nav"
+import { Separator } from "@/components/ui/separator";
+import { Metadata } from "next";
+import Image from "next/image";
+import { SidebarNav } from "./components/sidebar-nav";
 
 export const metadata: Metadata = {
   title: "Minha conta",
   description: "Configure seus dados",
-}
+};
 
 const sidebarNavItems = [
   {
     title: "Perfil",
-    href: "/perfil",
+    href: "/conta",
   },
-]
+  {
+    title: "Cupons",
+    href: "/conta/cupons",
+  },
+];
 
 interface SettingsLayoutProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export default function SettingsLayout({ children }: SettingsLayoutProps) {
@@ -39,5 +43,5 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
         </div>
       </div>
     </>
-  )
+  );
 }
