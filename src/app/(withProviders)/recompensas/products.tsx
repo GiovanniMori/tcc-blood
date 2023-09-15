@@ -12,6 +12,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
 import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -26,12 +38,13 @@ export default function Rewards({ reward, user }: RewardProps) {
 
   function handleRedeem() {
     if (reward.points < user.points) {
-      axios.post("/api/redeem", { id: reward.id }).then((res) => {});
-      toast({
-        title: "Scheduled: Catch up",
-        description: "Friday, February 10, 2023 at 5:57 PM",
+      axios.post("/api/redeem", { id: reward.id }).then((res) => {
+        toast({
+          title: "Cupom gerado com sucesso",
+          description: "Você pode ver o cupom na sua pagina de perfil",
+        });
+        setShowConfetti(true);
       });
-      setShowConfetti(true);
     } else {
       toast({
         title: "Falha ao resgatar",
@@ -61,7 +74,52 @@ export default function Rewards({ reward, user }: RewardProps) {
         <div className="text-primary font-semibold text-lg">
           {reward.points} pontos
         </div>
-        <Button onClick={handleRedeem}>Resgatar</Button>
+        <AlertDialog>
+          <AlertDialogTrigger>Resgatar</AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Você deseja resgatar {reward.name}?
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Tem certeza de que deseja resgatar este produto? Por favor,
+                esteja ciente das seguintes informações importantes antes de
+                prosseguir:{" "}
+                <ul className="list-disc flex flex-col p-4">
+                  <li>
+                    O código de resgate será gerado após a confirmação. O código
+                    será disponibilizado na sua página de perfil.
+                  </li>
+                  <li>
+                    O código será disponibilizado na sua página de perfil.
+                  </li>
+                  <li>
+                    Após o resgate, não será possível desfazê-lo ou recuperar os
+                    pontos utilizados.
+                  </li>
+                  <li>
+                    Certifique-se de que você atende a todos os requisitos e
+                    termos de resgate deste produto.
+                  </li>
+                  <li>
+                    Caso tenha alguma dúvida ou problema, entre em contato com
+                    nosso suporte.
+                  </li>
+                </ul>{" "}
+                Se você tem certeza de que deseja prosseguir e aceita as
+                condições acima, clique em &ldquo;Resgatar&rdquo; abaixo. Caso
+                contrário,&nbsp; clique em &ldquo;Cancelar&rdquo; para revisar
+                sua escolha.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogAction onClick={handleRedeem}>
+                Resgatar
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </CardFooter>
     </Card>
   );
