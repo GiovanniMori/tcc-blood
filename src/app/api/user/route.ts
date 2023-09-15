@@ -42,7 +42,7 @@ export async function POST(request: Request) {
           id: user.id,
         },
       });
-      return NextResponse.json({ userPrisma });
+      return NextResponse.json(userPrisma);
     }
     return NextResponse.json({ a: "a" });
   } catch (error: any) {

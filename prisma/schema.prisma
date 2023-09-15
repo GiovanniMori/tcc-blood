@@ -31,9 +31,9 @@ model Hemocenter {
 model Appointment {
   id           String     @id @default(uuid())
   user         User       @relation(fields: [userId], references: [id])
-  userId       String
+  userId       String     @map("user_id")
   hemocenter   Hemocenter @relation(fields: [hemocenterId], references: [id])
-  hemocenterId String
+  hemocenterId String     @map("hemocenter_id")
   date         DateTime
 
   @@index([hemocenterId])
@@ -42,26 +42,40 @@ model Appointment {
 
 model User {
   id               String        @unique
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @default(now())
+  createdAt        DateTime      @default(now()) @map("created_at")
+  updatedAt        DateTime      @default(now()) @map("updated_at")
   email            String        @unique
   name             String        @db.VarChar(255)
   points           Int           @default(0)
   role             UserRole      @default(USER)
   gender           Gender
   lastDonationDate DateTime?     @map("last_donation_date")
-  bloodType        BloodType     @default(UKNOWN)
+  bloodType        BloodType     @default(UKNOWN) @map("blood_type")
   cpf              String        @unique
-  isEligible       Boolean       @default(true)
   appointments     Appointment[]
+  Voucher          Voucher[]
 }
 
-model SponsorShip {
-  id          String @id @default(uuid())
+model Reward {
+  id          String    @id @default(uuid())
   name        String
-  image       String
+  description String
+  imageUrl    String
   points      Int
-  description String @db.LongText()
+  Voucher     Voucher[]
+}
+
+model Voucher {
+  id          String   @id @default(uuid())
+  code        String   @unique
+  generatedAt DateTime @default(now()) @map("generated_at")
+  user        User?    @relation(fields: [reedemedBy], references: [id])
+  reedemedBy  String?  @map("reedemed_by")
+  Reward      Reward   @relation(fields: [rewardId], references: [id])
+  rewardId    String   @map("reward_id")
+
+  @@index([rewardId])
+  @@index([reedemedBy])
 }
 
 enum BloodType {
