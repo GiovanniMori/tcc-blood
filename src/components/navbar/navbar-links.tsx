@@ -26,10 +26,16 @@ export default async function NavbarLinks() {
         </>
       )}
       <Link
-        href="/"
+        href="/doar"
         className="text-sm font-medium transition-colors hover:text-primary"
       >
         Doar
+      </Link>
+      <Link
+        href="/recompensas"
+        className="text-sm font-medium transition-colors hover:text-primary"
+      >
+        Recompensas
       </Link>
     </div>
   );

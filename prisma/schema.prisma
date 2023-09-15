@@ -57,11 +57,11 @@ model User {
 }
 
 model SponsorShip {
-  id           String @id @default(uuid())
-  name         String
-  image        String
-  points       Int
-  descriptions String
+  id          String @id @default(uuid())
+  name        String
+  image       String
+  points      Int
+  description String @db.LongText()
 }
 
 enum BloodType {

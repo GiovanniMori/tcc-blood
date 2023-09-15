@@ -12,22 +12,15 @@ import Goal from "@/components/homepage/goal";
 import { Donate } from "@/components/donate";
 import { Booking } from "@/components/booking";
 import prisma from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+import { getUser } from "@/service/user";
 
 export default async function Home() {
-  const { userId } = auth();
-  if (!userId) {
-    return null;
-  }
-  const dbUser = await prisma.user.findUnique({
-    where: {
-      id: userId,
-    },
-  });
+  const user = await getUser();
   const hemocenters = await prisma.hemocenter.findMany();
+
   return (
     <main className="flex flex-col gap-8">
-      <Booking user={dbUser!} hemocenters={hemocenters} />
+      <Booking user={user!} hemocenters={hemocenters} />
     </main>
   );
 }
