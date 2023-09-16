@@ -17,10 +17,34 @@ import { getUser } from "@/service/user";
 export default async function Home() {
   const user = await getUser();
   const hemocenters = await prisma.hemocenter.findMany();
+  const appointments = await prisma.appointment.findMany({});
+  const disabledDates: Date[] = [];
+
+  const appointmentsByHour: { [hour: number]: number } = {};
+  for (let i = 7; i <= 23; i++) {
+    appointmentsByHour[i] = 0;
+  }
+
+  appointments.forEach((appointment) => {
+    const appointmentDate = new Date(appointment.date);
+    const hour = appointmentDate.getHours();
+    appointmentsByHour[hour]++;
+  });
+
+  for (let i = 7; i <= 23; i++) {
+    if (appointmentsByHour[i] >= 3) {
+      // If there are 3 or more appointments scheduled for this hour, it is not available
+      disabledDates.push(new Date(0, 0, 0, i));
+    }
+  }
 
   return (
     <main className="flex flex-col gap-8">
-      <Booking user={user!} hemocenters={hemocenters} />
+      <Booking
+        user={user!}
+        hemocenters={hemocenters}
+        disabledDates={disabledDates}
+      />
     </main>
   );
 }
