@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Reward, User } from "@prisma/client";
+import { Donor, Reward, User } from "@prisma/client";
 import React from "react";
 import { useState } from "react";
 import Confetti from "react-confetti";
@@ -29,7 +29,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Image from "next/image";
 interface RewardProps {
-  user: User;
+  user: Donor;
   reward: Reward;
 }
 export default function Rewards({ reward, user }: RewardProps) {

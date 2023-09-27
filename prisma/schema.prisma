@@ -37,8 +37,8 @@ generator zod {
 
 enum UserRole {
   ADMIN
+  DONOR
   MOD
-  USER
   SPONSOR
 }
 
@@ -57,30 +57,52 @@ model Hemocenter {
 
 model Appointment {
   id           String     @id @default(uuid())
-  user         User       @relation(fields: [userId], references: [id])
-  userId       String     @map("user_id")
   hemocenter   Hemocenter @relation(fields: [hemocenterId], references: [id])
   hemocenterId String     @map("hemocenter_id")
   date         DateTime
+  Donor        Donor?     @relation(fields: [donorUserId], references: [id])
+  donorUserId  String?
 
+  @@index([donorUserId])
   @@index([hemocenterId])
-  @@index([userId])
 }
 
 model User {
-  id               String        @unique
-  createdAt        DateTime      @default(now()) @map("created_at")
-  updatedAt        DateTime      @default(now()) @map("updated_at")
-  email            String        @unique
-  name             String        @db.VarChar(255)
-  points           Int           @default(0)
-  role             UserRole      @default(USER)
-  gender           Gender
+  id        String    @id @unique
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @map("updated_at")
+  email     String    @unique
+  name      String    @db.VarChar(255)
+  role      UserRole  @default(DONOR)
+  Sponsor   Sponsor[]
+  Donor     Donor[]
+}
+
+model Donor {
+  id               String        @id @map("id")
+  user             User          @relation(fields: [id], references: [id])
   lastDonationDate DateTime?     @map("last_donation_date")
-  bloodType        BloodType     @default(UKNOWN) @map("blood_type")
   cpf              String        @unique
+  points           Int           @default(0)
+  gender           Gender
   appointments     Appointment[]
   Voucher          Voucher[]
+
+  bloodType BloodType @default(UKNOWN) @map("blood_type")
+
+  @@index([id])
+}
+
+model Sponsor {
+  name      String
+  email     String    @unique
+  id        String    @id
+  user      User      @relation(fields: [id], references: [id])
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @map("updated_at")
+  Voucher   Voucher[]
+
+  @@index([id])
 }
 
 model Reward {
@@ -96,11 +118,14 @@ model Voucher {
   id          String   @id @default(uuid())
   code        String   @unique
   generatedAt DateTime @default(now()) @map("generated_at")
-  user        User?    @relation(fields: [reedemedBy], references: [id])
+  donor       Donor?   @relation(fields: [reedemedBy], references: [id])
   reedemedBy  String?  @map("reedemed_by")
   Reward      Reward   @relation(fields: [rewardId], references: [id])
   rewardId    String   @map("reward_id")
+  Sponsor     Sponsor  @relation(fields: [sponsorId], references: [id])
+  sponsorId   String   @map("sponsor_id")
 
+  @@index([sponsorId])
   @@index([rewardId])
   @@index([reedemedBy])
 }

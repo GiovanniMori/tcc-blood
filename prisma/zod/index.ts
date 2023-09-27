@@ -1,5 +1,7 @@
 export * from "./hemocenter"
 export * from "./appointment"
 export * from "./user"
+export * from "./donor"
+export * from "./sponsor"
 export * from "./reward"
 export * from "./voucher"

@@ -5,21 +5,22 @@ import Products from "./products";
 import { getUser } from "@/service/user";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import { getDonor } from "@/service/donor";
 
 export default async function Page() {
   const rewards = await prisma.reward.findMany();
-  const user = await getUser();
+  const donor = await getDonor();
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between">
-        <div className="text-2xl">Seus pontos {user?.points}</div>
+        <div className="text-2xl">Seus pontos {donor?.points}</div>
         <Button>Filtro</Button>
       </div>
       <Separator />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {rewards.map((reward) => (
-          <Products reward={reward} key={reward.id} user={user!} />
+          <Products reward={reward} key={reward.id} user={donor!} />
         ))}
       </div>
     </div>

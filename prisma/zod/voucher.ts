@@ -1,5 +1,5 @@
 import * as z from "zod"
-import { CompleteUser, RelatedUserSchema, CompleteReward, RelatedRewardSchema } from "./index"
+import { CompleteDonor, RelatedDonorSchema, CompleteReward, RelatedRewardSchema, CompleteSponsor, RelatedSponsorSchema } from "./index"
 
 export const VoucherSchema = z.object({
   id: z.string(),
@@ -7,11 +7,13 @@ export const VoucherSchema = z.object({
   generatedAt: z.date(),
   reedemedBy: z.string().nullish(),
   rewardId: z.string(),
+  sponsorId: z.string(),
 })
 
 export interface CompleteVoucher extends z.infer<typeof VoucherSchema> {
-  user?: CompleteUser | null
+  donor?: CompleteDonor | null
   Reward: CompleteReward
+  Sponsor: CompleteSponsor
 }
 
 /**
@@ -20,6 +22,7 @@ export interface CompleteVoucher extends z.infer<typeof VoucherSchema> {
  * NOTE: Lazy required in case of potential circular dependencies within schema
  */
 export const RelatedVoucherSchema: z.ZodSchema<CompleteVoucher> = z.lazy(() => VoucherSchema.extend({
-  user: RelatedUserSchema.nullish(),
+  donor: RelatedDonorSchema.nullish(),
   Reward: RelatedRewardSchema,
+  Sponsor: RelatedSponsorSchema,
 }))

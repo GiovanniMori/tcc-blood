@@ -24,6 +24,8 @@ export async function GET(request: NextRequest) {
     totalPage: totalPages,
   });
 }
+// ...
+
 export async function POST(request: Request) {
   try {
     const { userId } = auth();
@@ -35,12 +37,16 @@ export async function POST(request: Request) {
     if (user) {
       const userPrisma = await prisma.user.create({
         data: {
+          id: user.id,
           name: data.name,
           email: user.emailAddresses[0].emailAddress,
-          cpf: data.cpf.replaceAll(".", "").replaceAll("-", ""),
-          gender: data.gender,
-          id: user.id,
-        },
+          Donor: {
+            create: {
+              cpf: data.cpf.replaceAll(".", "").replaceAll("-", ""),
+              gender: data.gender,
+            },
+          },
+        }, // add type assertion here
       });
       return NextResponse.json(userPrisma);
     }

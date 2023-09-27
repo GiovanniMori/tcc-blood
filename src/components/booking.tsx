@@ -49,15 +49,16 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import React from "react";
 import { donateSchema } from "@/schemas/donate";
-import { Appointment, Hemocenter, User } from "@prisma/client";
+import { Appointment, Donor, Hemocenter, User } from "@prisma/client";
 import { Input } from "./ui/input";
+import { donorWithUser } from "@/types/donorWithUser";
 
 interface BookingProps {
-  user: User;
+  donor: donorWithUser;
   hemocenters: Hemocenter[];
   disabledDates: Date[];
 }
-export function Booking({ user, hemocenters, disabledDates }: BookingProps) {
+export function Booking({ donor, hemocenters, disabledDates }: BookingProps) {
   const [date, setDate] = React.useState<Date>();
   const form = useForm<donateSchema>({
     resolver: zodResolver(donateSchema),
@@ -82,12 +83,12 @@ export function Booking({ user, hemocenters, disabledDates }: BookingProps) {
         <Card>
           <CardHeader>
             <CardTitle>Seus dados</CardTitle>
-            <CardDescription>{user.name}</CardDescription>
+            <CardDescription>{donor.user.name}</CardDescription>
           </CardHeader>
           <CardContent>
-            <p>CPF: {user.cpf}</p>
-            <p>Email: {user.email}</p>
-            <p>Sexo: {user.gender}</p>
+            <p>CPF: {donor.cpf}</p>
+            <p>Email: {donor.user.email}</p>
+            <p>Sexo: {donor.gender}</p>
           </CardContent>
           <CardFooter className="flex justify-end  ">
             <Button variant="secondary" asChild>

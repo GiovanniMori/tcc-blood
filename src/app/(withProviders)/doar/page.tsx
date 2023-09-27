@@ -13,9 +13,10 @@ import { Donate } from "@/components/donate";
 import { Booking } from "@/components/booking";
 import prisma from "@/lib/prisma";
 import { getUser } from "@/service/user";
+import { getDonor } from "@/service/donor";
 
 export default async function Home() {
-  const user = await getUser();
+  const donor = await getDonor();
   const hemocenters = await prisma.hemocenter.findMany();
   const appointments = await prisma.appointment.findMany({});
   const disabledDates: Date[] = [];
@@ -41,7 +42,7 @@ export default async function Home() {
   return (
     <main className="flex flex-col gap-8">
       <Booking
-        user={user!}
+        donor={donor!}
         hemocenters={hemocenters}
         disabledDates={disabledDates}
       />

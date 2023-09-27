@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useFieldArray, useForm } from "react-hook-form"
-import * as z from "zod"
+import Link from "next/link";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useFieldArray, useForm } from "react-hook-form";
+import * as z from "zod";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 import {
   Form,
   FormControl,
@@ -14,23 +14,23 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
-import { toast } from "@/components/ui/use-toast"
-import { Button } from "@/components/ui/button"
-import { userSchema } from "@/schemas/user"
-import { User } from "@prisma/client"
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
+import { userSchema } from "@/schemas/user";
+import { Donor, User } from "@prisma/client";
 
 interface ProfileFormProps {
-  user: User
+  user: any;
 }
 
 export function ProfileForm({ user }: ProfileFormProps) {
@@ -43,7 +43,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
       // blood_type: user.bloodType,
     },
     mode: "onChange",
-  })
+  });
 
   function onSubmit(data: userSchema) {
     toast({
@@ -53,7 +53,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
           <code className="text-white">{JSON.stringify(data, null, 2)}</code>
         </pre>
       ),
-    })
+    });
   }
 
   return (
@@ -127,5 +127,5 @@ export function ProfileForm({ user }: ProfileFormProps) {
         <Button type="submit">Atualizar perfil</Button>
       </form>
     </Form>
-  )
+  );
 }
