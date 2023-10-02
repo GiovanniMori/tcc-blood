@@ -8,29 +8,47 @@ import generateVoucherCode from "@/utils/generate-voucher";
 
 export async function POST(request: Request) {
   const user = await getUser();
+
   if (!user) {
     return new Response("Unauthorized", { status: 401 });
   }
+  if (user.role !== "DONOR") {
+    return new Response("Unauthorized", { status: 401 });
+  }
+  const donor = await prisma.donor.findFirstOrThrow({
+    where: { id: user.id },
+  });
   try {
     const data = redeemSchema.parse(await request.json());
     const reward = await prisma.reward.findFirstOrThrow({
       where: { id: data.id },
       select: { points: true },
     });
-
+    // points: user.points - reward.points
     await prisma.user.update({
       where: { id: user.id },
-      data: { points: user.points - reward.points },
-    });
-    const voucher = await prisma.voucher.create({
       data: {
-        user: { connect: { id: user.id } },
-        Reward: { connect: { id: data.id } },
-        code: generateVoucherCode(10), // generate a random string of length 10
+        Donor: {
+          update: {
+            where: {
+              id: user.id,
+            },
+            data: {
+              points: donor.points - reward.points,
+            },
+          },
+        },
       },
     });
+    // const voucher = await prisma.voucher.create({
+    //   data: {
+    //     donor: { connect: { id: user.id } },
+    //     Reward: { connect: { id: data.id } },
+    //     code: generateVoucherCode(10), // generate a random string of length 10
+    //   },
+    // });
 
-    return NextResponse.json(voucher);
+    return NextResponse.json(true);
   } catch (error: any) {
     return new Response(error.message, { status: 400 });
   }

@@ -10,7 +10,7 @@ import {
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Dashboard",
+  title: "Patrocinador",
   description: "Example dashboard app using the components.",
 };
 

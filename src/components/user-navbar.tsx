@@ -38,8 +38,8 @@ export default async function UserNavbar() {
                   <h4 className="font-medium leading-none">{user!.name}</h4>
                   <p className="text-sm text-muted-foreground">{user!.email}</p>
                 </div>
-                <Link href={"/conta"}>Perfil</Link>
-                <Link href={"/conta/cupons"}>Cupons</Link>
+                <Link href={"/configuracoes"}>Configurações</Link>
+                <Link href={"/configuracoes/cupons"}>Cupons</Link>
                 <Separator />
                 <div className="grid gap-2">
                   <Button variant="default">Sair</Button>

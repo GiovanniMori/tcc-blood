@@ -1,12 +1,12 @@
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
-import { User } from "@prisma/client";
+import { Donor } from "@prisma/client";
 
-export async function getUser(): Promise<User | null> {
+export async function getDonor(): Promise<Donor | null> {
   const user = await currentUser();
   if (user) {
     try {
-      const userDb = await prisma.user.findUniqueOrThrow({
+      const userDb = await prisma.donor.findUniqueOrThrow({
         where: {
           id: user.id,
         },

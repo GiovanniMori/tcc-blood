@@ -8,10 +8,37 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator erd {
+  provider = "prisma-erd-generator"
+}
+
+generator zod {
+  provider = "zod-prisma"
+  output   = "./zod" // (default) the directory where generated zod schemas will be saved
+
+  relationModel = true // (default) Create and export both plain and related models.
+  // relationModel         = "default" // Do not export model without relations.
+  // relationModel         = false // Do not generate related model
+
+  modelCase = "PascalCase" // (default) Output models using pascal case (ex. UserModel, PostModel)
+  // modelCase             = "camelCase" // Output models using camel case (ex. userModel, postModel)
+
+  modelSuffix = "Schema" // (default) Suffix to apply to your prisma models when naming Zod schemas
+
+  // useDecimalJs          = false // (default) represent the prisma Decimal type using as a JS number
+  useDecimalJs = true // represent the prisma Decimal type using Decimal.js (as Prisma does)
+
+  imports = "" // (default) will import the referenced file in generated schemas to be used via imports.someExportedVariable
+
+  // https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-by-null-values
+  prismaJsonNullability = false // (default) uses prisma's scheme for JSON field nullability
+  // prismaJsonNullability = false // allows null assignment to optional JSON fields
+}
+
 enum UserRole {
   ADMIN
+  DONOR
   MOD
-  USER
   SPONSOR
 }
 
@@ -30,30 +57,76 @@ model Hemocenter {
 
 model Appointment {
   id           String     @id @default(uuid())
-  user         User       @relation(fields: [userId], references: [id])
-  userId       String     @map("user_id")
   hemocenter   Hemocenter @relation(fields: [hemocenterId], references: [id])
   hemocenterId String     @map("hemocenter_id")
   date         DateTime
+  Donor        Donor?     @relation(fields: [donorUserId], references: [id])
+  donorUserId  String?
 
+  @@index([donorUserId])
   @@index([hemocenterId])
-  @@index([userId])
 }
 
 model User {
-  id               String        @unique
-  createdAt        DateTime      @default(now()) @map("created_at")
-  updatedAt        DateTime      @default(now()) @map("updated_at")
-  email            String        @unique
-  name             String        @db.VarChar(255)
-  points           Int           @default(0)
-  role             UserRole      @default(USER)
-  gender           Gender
+  id        String    @id @unique
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @map("updated_at")
+  email     String    @unique
+  name      String    @db.VarChar(255)
+  role      UserRole  @default(DONOR)
+  Sponsor   Sponsor[]
+  Donor     Donor[]
+}
+
+model Donor {
+  id               String        @id @map("id")
+  nickname         String        @unique
+  user             User          @relation(fields: [id], references: [id])
   lastDonationDate DateTime?     @map("last_donation_date")
-  bloodType        BloodType     @default(UKNOWN) @map("blood_type")
   cpf              String        @unique
+  points           Int           @default(0)
+  gender           Gender
   appointments     Appointment[]
   Voucher          Voucher[]
+  followers        Follows[]     @relation("following")
+  following        Follows[]     @relation("follower")
+  bloodType        BloodType     @default(UKNOWN) @map("blood_type")
+  Mission          Mission[]
+
+  @@index([id])
+}
+
+model Follows {
+  follower    Donor  @relation("follower", fields: [followerId], references: [id])
+  followerId  String @map("follower_id")
+  following   Donor  @relation("following", fields: [followingId], references: [id])
+  followingId String @map("following_id")
+
+  @@id([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
+}
+
+model Mission {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  progress    Int
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @map("updated_at")
+  donor       Donor[]
+}
+
+model Sponsor {
+  name      String
+  email     String    @unique
+  id        String    @id
+  user      User      @relation(fields: [id], references: [id])
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @map("updated_at")
+  Voucher   Voucher[]
+
+  @@index([id])
 }
 
 model Reward {
@@ -69,11 +142,14 @@ model Voucher {
   id          String   @id @default(uuid())
   code        String   @unique
   generatedAt DateTime @default(now()) @map("generated_at")
-  user        User?    @relation(fields: [reedemedBy], references: [id])
+  donor       Donor?   @relation(fields: [reedemedBy], references: [id])
   reedemedBy  String?  @map("reedemed_by")
   Reward      Reward   @relation(fields: [rewardId], references: [id])
   rewardId    String   @map("reward_id")
+  Sponsor     Sponsor  @relation(fields: [sponsorId], references: [id])
+  sponsorId   String   @map("sponsor_id")
 
+  @@index([sponsorId])
   @@index([rewardId])
   @@index([reedemedBy])
 }

@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs";
 import prisma from "@/lib/prisma";
 import { registerSchema } from "@/schemas/register";
 import { currentUser } from "@clerk/nextjs/server";
+import { generateNickname } from "@/utils/generate-nickname";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +25,8 @@ export async function GET(request: NextRequest) {
     totalPage: totalPages,
   });
 }
+// ...
+
 export async function POST(request: Request) {
   try {
     const { userId } = auth();
@@ -35,12 +38,17 @@ export async function POST(request: Request) {
     if (user) {
       const userPrisma = await prisma.user.create({
         data: {
+          id: user.id,
           name: data.name,
           email: user.emailAddresses[0].emailAddress,
-          cpf: data.cpf.replaceAll(".", "").replaceAll("-", ""),
-          gender: data.gender,
-          id: user.id,
-        },
+          Donor: {
+            create: {
+              cpf: data.cpf.replaceAll(".", "").replaceAll("-", ""),
+              gender: data.gender,
+              nickname: generateNickname(user.emailAddresses[0].emailAddress),
+            },
+          },
+        }, // add type assertion here
       });
       return NextResponse.json(userPrisma);
     }

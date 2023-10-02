@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { CalendarIcon } from "@radix-ui/react-icons"
-import { format } from "date-fns"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CalendarIcon } from "@radix-ui/react-icons";
+import { format } from "date-fns";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { ptBR } from "date-fns/locale";
 import {
   Select,
   SelectContent,
@@ -19,9 +19,9 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 
-import { Checkbox } from "@/components/ui/checkbox"
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -30,13 +30,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
+} from "@/components/ui/form";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { toast } from "@/components/ui/use-toast"
+} from "@/components/ui/popover";
+import { toast } from "@/components/ui/use-toast";
 import {
   Card,
   CardContent,
@@ -44,23 +44,28 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
-import Link from "next/link"
-import React from "react"
-import { donateSchema } from "@/schemas/donate"
-import { Hemocenter, User } from "@prisma/client"
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
+import React from "react";
+import { donateSchema } from "@/schemas/donate";
+import { Appointment, Donor, Hemocenter, User } from "@prisma/client";
+import { Input } from "./ui/input";
+import { donorWithUser } from "@/types/donorWithUser";
 
 interface BookingProps {
-  user: User
-  hemocenters: Hemocenter[]
+  donor: donorWithUser;
+  hemocenters: Hemocenter[];
+  disabledDates: Date[];
 }
-export function Booking({ user, hemocenters }: BookingProps) {
-  const [date, setDate] = React.useState<Date>()
+export function Booking({ donor, hemocenters, disabledDates }: BookingProps) {
+  const [date, setDate] = React.useState<Date>();
   const form = useForm<donateSchema>({
     resolver: zodResolver(donateSchema),
     defaultValues: {},
-  })
+  });
+  const minDate = new Date();
+  console.log(disabledDates);
   function handleBooking() {
     toast({
       title: "Seu agendamento foi confirmado!",
@@ -69,7 +74,7 @@ export function Booking({ user, hemocenters }: BookingProps) {
           <code className="text-white">oi</code>
         </pre>
       ),
-    })
+    });
   }
 
   return (
@@ -78,12 +83,12 @@ export function Booking({ user, hemocenters }: BookingProps) {
         <Card>
           <CardHeader>
             <CardTitle>Seus dados</CardTitle>
-            <CardDescription>{user.name}</CardDescription>
+            <CardDescription>{donor.user.name}</CardDescription>
           </CardHeader>
           <CardContent>
-            <p>CPF: {user.cpf}</p>
-            <p>Email: {user.email}</p>
-            <p>Sexo: {user.gender}</p>
+            <p>CPF: {donor.cpf}</p>
+            <p>Email: {donor.user.email}</p>
+            <p>Sexo: {donor.gender}</p>
           </CardContent>
           <CardFooter className="flex justify-end  ">
             <Button variant="secondary" asChild>
@@ -97,7 +102,6 @@ export function Booking({ user, hemocenters }: BookingProps) {
             <CardDescription>Escolha o posto mais próximo</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-8">
-            <Label> {hemocenters[0].address}</Label>
             <Select>
               <SelectTrigger>
                 <SelectValue placeholder="Ver postos disponíveis" />
@@ -129,11 +133,15 @@ export function Booking({ user, hemocenters }: BookingProps) {
                 <Calendar
                   mode="single"
                   selected={date}
+                  fromDate={new Date()}
+                  locale={ptBR}
                   onSelect={setDate}
+                  disabled={disabledDates}
                   initialFocus
                 />
               </PopoverContent>
             </Popover>
+            <Input type="time" step="1800" />
           </CardContent>
           <CardFooter className="flex justify-end  ">
             <Button variant="default" onClick={handleBooking}>
@@ -143,5 +151,5 @@ export function Booking({ user, hemocenters }: BookingProps) {
         </Card>
       </div>
     </div>
-  )
+  );
 }
