@@ -10,6 +10,9 @@ export async function getSponsor(): Promise<Sponsor | null> {
         where: {
           id: user.id,
         },
+        include: {
+          user: true,
+        },
       });
       return userDb;
     } catch {

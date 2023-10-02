@@ -1,9 +1,10 @@
 import * as z from "zod"
 import { Gender, BloodType } from "@prisma/client"
-import { CompleteUser, RelatedUserSchema, CompleteAppointment, RelatedAppointmentSchema, CompleteVoucher, RelatedVoucherSchema } from "./index"
+import { CompleteUser, RelatedUserSchema, CompleteAppointment, RelatedAppointmentSchema, CompleteVoucher, RelatedVoucherSchema, CompleteFollows, RelatedFollowsSchema, CompleteMission, RelatedMissionSchema } from "./index"
 
 export const DonorSchema = z.object({
   id: z.string(),
+  nickname: z.string(),
   lastDonationDate: z.date().nullish(),
   cpf: z.string(),
   points: z.number().int(),
@@ -15,6 +16,9 @@ export interface CompleteDonor extends z.infer<typeof DonorSchema> {
   user: CompleteUser
   appointments: CompleteAppointment[]
   Voucher: CompleteVoucher[]
+  followers: CompleteFollows[]
+  following: CompleteFollows[]
+  Mission: CompleteMission[]
 }
 
 /**
@@ -26,4 +30,7 @@ export const RelatedDonorSchema: z.ZodSchema<CompleteDonor> = z.lazy(() => Donor
   user: RelatedUserSchema,
   appointments: RelatedAppointmentSchema.array(),
   Voucher: RelatedVoucherSchema.array(),
+  followers: RelatedFollowsSchema.array(),
+  following: RelatedFollowsSchema.array(),
+  Mission: RelatedMissionSchema.array(),
 }))

@@ -80,6 +80,7 @@ model User {
 
 model Donor {
   id               String        @id @map("id")
+  nickname         String        @unique
   user             User          @relation(fields: [id], references: [id])
   lastDonationDate DateTime?     @map("last_donation_date")
   cpf              String        @unique
@@ -87,10 +88,33 @@ model Donor {
   gender           Gender
   appointments     Appointment[]
   Voucher          Voucher[]
-
-  bloodType BloodType @default(UKNOWN) @map("blood_type")
+  followers        Follows[]     @relation("following")
+  following        Follows[]     @relation("follower")
+  bloodType        BloodType     @default(UKNOWN) @map("blood_type")
+  Mission          Mission[]
 
   @@index([id])
+}
+
+model Follows {
+  follower    Donor  @relation("follower", fields: [followerId], references: [id])
+  followerId  String
+  following   Donor  @relation("following", fields: [followingId], references: [id])
+  followingId String
+
+  @@id([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
+}
+
+model Mission {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  progress    Int
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @map("updated_at")
+  donor       Donor[]
 }
 
 model Sponsor {
