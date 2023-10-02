@@ -37,6 +37,18 @@ export default async function NavbarLinks() {
       >
         Recompensas
       </Link>
+      <Link
+        href="/missoes"
+        className="text-sm font-medium transition-colors hover:text-primary"
+      >
+        Missōes
+      </Link>
+      <Link
+        href="/perfil"
+        className="text-sm font-medium transition-colors hover:text-primary"
+      >
+        Perfil
+      </Link>
     </div>
   );
 }

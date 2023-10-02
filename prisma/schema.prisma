@@ -98,9 +98,9 @@ model Donor {
 
 model Follows {
   follower    Donor  @relation("follower", fields: [followerId], references: [id])
-  followerId  String
+  followerId  String @map("follower_id")
   following   Donor  @relation("following", fields: [followingId], references: [id])
-  followingId String
+  followingId String @map("following_id")
 
   @@id([followerId, followingId])
   @@index([followerId])

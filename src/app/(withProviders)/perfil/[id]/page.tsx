@@ -36,8 +36,8 @@ export default async function Home({ params }: { params: { id: string } }) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-      <div className="flex flex-col gap-2">
+    <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+      <div className="flex flex-col gap-2 col-span-3">
         <div>
           <div className="text-lg font-semibold">{donor.user.name}</div>
           <div>@{donor.nickname}</div>
@@ -55,8 +55,7 @@ export default async function Home({ params }: { params: { id: string } }) {
           <div>Conquistas</div>
         </div>
       </div>
-
-      <div className="flex flex-col gap-2 ">
+      <div className="flex flex-col gap-2 col-span-2 ">
         <div className="md:hidden flex gap-2 justify-between">
           <div>Amigos</div>
           <Link href="/perfil/1">Adicionar amigos</Link>

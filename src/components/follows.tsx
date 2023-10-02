@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Prisma } from "@prisma/client";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import {
   Dialog,
@@ -20,7 +21,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Separator } from "./ui/separator";
-import { MoveRightIcon } from "lucide-react";
+import { MoveRightIcon, UserCheck2, UserPlus2 } from "lucide-react";
+import { Button } from "./ui/button";
 
 type donor = Prisma.DonorGetPayload<{
   include: {
@@ -73,8 +75,34 @@ export default function Follows({ donor }: { donor: donor }) {
             <CardContent className="p-0">
               <div className="p-6">
                 {donor.followers.slice(0, 5).map((follower) => (
-                  <div key={follower.followingId}>
-                    {follower.follower.user.name}
+                  <div
+                    className="flex items-center gap-2 justify-between"
+                    key={follower.followingId}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Avatar>
+                        <AvatarImage src="https://github.com/shadcn.pngs" />
+                        <AvatarFallback>
+                          {follower.follower.user.name[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <div>{follower.follower.user.name}b</div>
+                        <div>{follower.follower.user.name}</div>
+                      </div>
+                    </div>
+                    {donor.following.some(
+                      (following) =>
+                        following.followingId === follower.followerId
+                    ) ? (
+                      <Button>
+                        <UserCheck2 />
+                      </Button>
+                    ) : (
+                      <Button>
+                        <UserPlus2 />
+                      </Button>
+                    )}
                   </div>
                 ))}
               </div>
@@ -117,4 +145,8 @@ export default function Follows({ donor }: { donor: donor }) {
       </TabsContent>
     </Tabs>
   );
+}
+
+export function User() {
+  return <div>User</div>;
 }
