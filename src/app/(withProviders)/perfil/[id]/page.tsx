@@ -2,15 +2,7 @@ import { Separator } from "@/components/ui/separator";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { redirect, useParams } from "next/navigation";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Follows from "@/components/follows";
 
 export default async function Home({ params }: { params: { id: string } }) {
   const donor = await prisma.donor.findUnique({
@@ -42,7 +34,6 @@ export default async function Home({ params }: { params: { id: string } }) {
   if (!donor) {
     redirect("/404");
   }
-  console.log(donor);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
@@ -70,48 +61,7 @@ export default async function Home({ params }: { params: { id: string } }) {
           <div>Amigos</div>
           <Link href="/perfil/1">Adicionar amigos</Link>
         </div>
-        <Tabs defaultValue="Segue">
-          <TabsList className="w-full">
-            <TabsTrigger value="Segue" className="w-full">
-              Segue
-            </TabsTrigger>
-            <TabsTrigger value="Seguidores" className="w-full">
-              Seguidores
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="Segue">
-            <Card className="pt-6">
-              <CardContent>
-                <p>
-                  {donor.following.map((follower) => (
-                    <div key={follower.followingId}>
-                      {follower.following.user.name}
-                    </div>
-                  ))}
-                </p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          <TabsContent value="Seguidores">
-            <Card className="pt-6">
-              {donor.followers.length > 0 ? (
-                <CardContent>
-                  <p>
-                    {donor.followers.map((follower) => (
-                      <div key={follower.followingId}>
-                        {follower.follower.user.name}
-                      </div>
-                    ))}
-                  </p>
-                </CardContent>
-              ) : (
-                <CardFooter>
-                  <p>Você não tem nenhum seguidor ainda</p>
-                </CardFooter>
-              )}
-            </Card>
-          </TabsContent>
-        </Tabs>
+        <Follows donor={donor} />
       </div>
     </div>
   );

@@ -1,0 +1,120 @@
+"use client";
+import React from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Prisma } from "@prisma/client";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Separator } from "./ui/separator";
+import { MoveRightIcon } from "lucide-react";
+
+type donor = Prisma.DonorGetPayload<{
+  include: {
+    user: true;
+    followers: {
+      include: {
+        follower: {
+          include: {
+            user: true;
+          };
+        };
+      };
+    };
+    following: {
+      include: {
+        following: {
+          include: {
+            user: true;
+          };
+        };
+      };
+    };
+  };
+}>;
+export default function Follows({ donor }: { donor: donor }) {
+  return (
+    <Tabs defaultValue="Segue">
+      <TabsList className="w-full">
+        <TabsTrigger value="Segue" className="w-full">
+          Segue
+        </TabsTrigger>
+        <TabsTrigger value="Seguidores" className="w-full">
+          Seguidores
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="Segue">
+        <Card className="pt-6">
+          <CardContent>
+            {donor.following.slice(0, 5).map((follower) => (
+              <div key={follower.followingId}>
+                {follower.following.user.name}
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </TabsContent>
+      <TabsContent value="Seguidores">
+        <Card>
+          {donor.followers.length > 0 ? (
+            <CardContent className="p-0">
+              <div className="p-6">
+                {donor.followers.slice(0, 5).map((follower) => (
+                  <div key={follower.followingId}>
+                    {follower.follower.user.name}
+                  </div>
+                ))}
+              </div>
+              <Separator />
+              <Dialog>
+                <DialogTrigger className="p-4 flex justify-between w-full">
+                  Ver mais
+                  <MoveRightIcon />
+                </DialogTrigger>
+                <DialogContent>
+                  <Tabs defaultValue="Segue">
+                    <DialogHeader className="items-center">
+                      <TabsList className="w-fit">
+                        <TabsTrigger value="Segue">Segue</TabsTrigger>
+                        <TabsTrigger value="Seguidores">Seguidores</TabsTrigger>
+                      </TabsList>
+                    </DialogHeader>
+                    <TabsContent value="Segue">
+                      <Card className="pt-6">
+                        <CardContent>
+                          {donor.following.slice(0, 5).map((follower) => (
+                            <div key={follower.followingId}>
+                              {follower.following.user.name}
+                            </div>
+                          ))}
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+                    <TabsContent value="Seguidores"></TabsContent>
+                  </Tabs>
+                </DialogContent>
+              </Dialog>
+            </CardContent>
+          ) : (
+            <CardFooter>
+              <div>Você não tem nenhum seguidor ainda</div>
+            </CardFooter>
+          )}
+        </Card>
+      </TabsContent>
+    </Tabs>
+  );
+}
