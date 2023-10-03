@@ -1,4 +1,5 @@
 import {
+  SignOutButton,
   SignedIn,
   SignedOut,
   auth,
@@ -42,7 +43,9 @@ export default async function UserNavbar() {
                 <Link href={"/configuracoes/cupons"}>Cupons</Link>
                 <Separator />
                 <div className="grid gap-2">
-                  <Button variant="default">Sair</Button>
+                  <SignOutButton>
+                    <Button variant="default">Sair</Button>
+                  </SignOutButton>
                 </div>
               </div>
             </PopoverContent>
