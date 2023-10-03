@@ -58,7 +58,7 @@ model User {
 model Donor {
   id               String        @id @map("id")
   nickname         String        @unique
-  user             User          @relation(fields: [id], references: [id])
+  user             User          @relation(fields: [id], references: [id], onDelete: Cascade)
   lastDonationDate DateTime?     @map("last_donation_date")
   cpf              String        @unique
   points           Int           @default(0)
