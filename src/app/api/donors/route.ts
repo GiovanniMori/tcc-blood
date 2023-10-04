@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { PaginatedResponse } from "@/types/paginatedResponse";
+import { Donor } from "@prisma/client";
+import { donorWithUser } from "@/types/donorWithUser";
 
 export const dynamic = "force-dynamic";
 
@@ -8,8 +11,7 @@ export async function GET(request: NextRequest) {
   const page_size = searchParams.get("page_size");
   const page_number = searchParams.get("page_number");
   const user = searchParams.get("user");
-
-  const users = await prisma.donor.findMany({
+  const donors = await prisma.donor.findMany({
     where: {
       OR: [
         {
@@ -29,11 +31,13 @@ export async function GET(request: NextRequest) {
     skip: Number(page_number) * Number(page_size),
     take: Number(page_size),
   });
-  const count = await prisma.donor.count();
+  const count = donors.length;
   const totalPages = Math.ceil(Number(count) / Number(page_size));
-  return NextResponse.json({
-    data: users,
-    status: 200,
+
+  const response: PaginatedResponse<Donor> = {
+    data: donors,
+    totalRecords: count,
     totalPage: totalPages,
-  });
+  };
+  return NextResponse.json(response);
 }
