@@ -29,7 +29,13 @@ model Hemocenter {
   id          String        @id @default(uuid())
   name        String
   address     String
+  startHour   String        @map("start_hour")
+  endHour     String        @map("end_hour")
+  maxCapacity Int           @map("max_capacity")
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
   appointment Appointment[]
+  workers     User[]
 }
 
 model Appointment {
@@ -45,14 +51,18 @@ model Appointment {
 }
 
 model User {
-  id        String    @id @unique
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @default(now()) @map("updated_at")
-  email     String    @unique
-  name      String    @db.VarChar(255)
-  role      UserRole  @default(DONOR)
-  Sponsor   Sponsor[]
-  Donor     Donor[]
+  id           String      @id @unique
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @default(now()) @map("updated_at")
+  email        String      @unique
+  name         String      @db.VarChar(255)
+  role         UserRole    @default(DONOR)
+  Sponsor      Sponsor?
+  Donor        Donor?
+  Hemocenter   Hemocenter? @relation(fields: [hemocenterId], references: [id])
+  hemocenterId String?
+
+  @@index([hemocenterId])
 }
 
 model Donor {

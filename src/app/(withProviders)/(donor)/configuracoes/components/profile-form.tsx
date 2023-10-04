@@ -27,10 +27,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { userSchema } from "@/schemas/user";
-import { Donor, User } from "@prisma/client";
+import { Donor, Sponsor, User } from "@prisma/client";
+import { donorWithUser } from "@/types/donorWithUser";
 
 interface ProfileFormProps {
-  user: any;
+  user: User;
 }
 
 export function ProfileForm({ user }: ProfileFormProps) {
@@ -39,8 +40,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
     defaultValues: {
       name: user.name,
       email: user.email,
-      cpf: user.cpf,
-      // blood_type: user.bloodType,
+      // blood_type: donor.bloodType,
     },
     mode: "onChange",
   });
@@ -92,14 +92,14 @@ export function ProfileForm({ user }: ProfileFormProps) {
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name="cpf"
           render={({ field }) => (
             <FormItem>
               <FormLabel>CPF</FormLabel>
               <FormControl>
-                <Input placeholder={user.cpf} {...field} disabled />
+                <Input placeholder={donor.cpf} {...field} disabled />
               </FormControl>
               <FormDescription>
                 You can manage verified email addresses in your{" "}
@@ -107,7 +107,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
         <FormField
           control={form.control}
           name="blood_type"
