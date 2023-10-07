@@ -58,8 +58,11 @@ interface BookingProps {
   hemocenters: Hemocenter[];
   disabledDates: Date[];
 }
+
 export function Booking({ donor, hemocenters, disabledDates }: BookingProps) {
   const [date, setDate] = React.useState<Date>();
+  const [hemocenter, setHemocenter] = React.useState();
+
   const form = useForm<donateSchema>({
     resolver: zodResolver(donateSchema),
     defaultValues: {},
@@ -77,10 +80,12 @@ export function Booking({ donor, hemocenters, disabledDates }: BookingProps) {
     });
   }
 
+  function handleHemocenterChange(value: string) {}
+
   return (
     <div className="flex flex-col gap-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card>
+      <div className="grid grid-cols-1 lg:grid-cols-10 gap-4">
+        <Card className="lg:col-span-3">
           <CardHeader>
             <CardTitle>Seus dados</CardTitle>
             <CardDescription>{donor.user.name}</CardDescription>
@@ -96,13 +101,16 @@ export function Booking({ donor, hemocenters, disabledDates }: BookingProps) {
             </Button>
           </CardFooter>
         </Card>
-        <Card>
+        <Card className="lg:col-span-7 ">
           <CardHeader>
             <CardTitle>Postos</CardTitle>
             <CardDescription>Escolha o posto mais próximo</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-8">
-            <Select>
+            <Select
+              defaultValue={hemocenter}
+              onValueChange={(value) => setHemocenter(value!)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Ver postos disponíveis" />
               </SelectTrigger>
