@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
   //   return new Response("Unauthorized", { status: 401 });
   // }
   const { searchParams } = new URL(request.url);
-  const datee = searchParams.get("page_size");
+  const date = searchParams.get("page_size");
   try {
     const appointments = await prisma.appointment.findMany({
       where: {

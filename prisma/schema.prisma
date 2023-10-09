@@ -20,7 +20,6 @@ enum UserRole {
 enum Gender {
   MALE
   FEMALE
-  PREFER_NOT_TO_SAY
 }
 
 model Hemocenter {
@@ -78,16 +77,18 @@ model User {
 model Donor {
   id               String        @id @map("id")
   nickname         String        @unique
-  user             User          @relation(fields: [id], references: [id], onDelete: Cascade)
   lastDonationDate DateTime?     @map("last_donation_date")
   cpf              String        @unique
   points           Int           @default(0)
+  bloodType        BloodType?    @map("blood_type")
+  user             User          @relation(fields: [id], references: [id], onDelete: Cascade)
+  referralBy       String?       @map("referral_by")
   gender           Gender
+  birthDate        DateTime?     @map("birth_date")
   appointments     Appointment[]
   Voucher          Voucher[]
   followers        Follows[]     @relation("following")
   following        Follows[]     @relation("follower")
-  bloodType        BloodType?    @map("blood_type")
   Mission          Mission[]
 
   @@index([id])

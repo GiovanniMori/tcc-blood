@@ -13,29 +13,29 @@ export async function GET(request: NextRequest) {
       body: "Missing hemocenterId parameter",
     });
   }
-  // const today = new Date();
-  // const tenDaysLater = new Date(today.getTime() + 10 * 24 * 60 * 60 * 1000);
+  const today = new Date();
+  const tenDaysLater = new Date(today.getTime() + 10 * 24 * 60 * 60 * 1000);
 
-  // const appointments = await prisma.appointment.findMany({
-  //   where: {
-  //     hemocenterId: hemocenterId,
-  //     AND: [
-  //       {
-  //         date: {
-  //           gte: today.toISOString(),
-  //         },
-  //       },
-  //       {
-  //         date: {
-  //           lt: tenDaysLater.toISOString(),
-  //         },
-  //       },
-  //     ],
-  //   },
-  //   select: {
-  //     date: true,
-  //   },
-  // });
+  const appointments = await prisma.appointment.findMany({
+    where: {
+      hemocenterId: hemocenterId,
+      AND: [
+        {
+          date: {
+            gte: today.toISOString(),
+          },
+        },
+        {
+          date: {
+            lt: tenDaysLater.toISOString(),
+          },
+        },
+      ],
+    },
+    select: {
+      date: true,
+    },
+  });
 
   // const availableDays = new Set();
   // for (let i = 0; i < 10; i++) {

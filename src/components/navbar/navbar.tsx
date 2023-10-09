@@ -4,7 +4,7 @@ import React from "react";
 import { Button } from "../ui/button";
 import { ThemeModeToggle } from "../theme-mode-toggle";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
-import UserNavbar from "../user-navbar";
+import UserNavbar from "./user-navbar";
 import {
   Sheet,
   SheetContent,

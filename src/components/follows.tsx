@@ -23,6 +23,8 @@ import {
 import { Separator } from "./ui/separator";
 import { MoveRightIcon, UserCheck2, UserPlus2 } from "lucide-react";
 import { Button } from "./ui/button";
+import MakeFriends from "./make-friends";
+import Link from "next/link";
 
 type donor = Prisma.DonorGetPayload<{
   include: {
@@ -49,23 +51,29 @@ type donor = Prisma.DonorGetPayload<{
 }>;
 export default function Follows({ donor }: { donor: donor }) {
   return (
-    <Tabs defaultValue="Segue">
+    <Tabs defaultValue="Seguindo">
       <TabsList className="w-full">
-        <TabsTrigger value="Segue" className="w-full">
-          Segue
+        <TabsTrigger value="Seguindo" className="w-full">
+          Seguindo
         </TabsTrigger>
         <TabsTrigger value="Seguidores" className="w-full">
           Seguidores
         </TabsTrigger>
       </TabsList>
-      <TabsContent value="Segue">
+      <TabsContent value="Seguindo">
         <Card className="pt-6">
           <CardContent>
-            {donor.following.slice(0, 5).map((follower) => (
-              <div key={follower.followingId}>
-                {follower.following.user.name}
-              </div>
-            ))}
+            {donor.following.length < 1 ? (
+              <MakeFriends />
+            ) : (
+              donor.following
+                .slice(0, 5)
+                .map((follower) => (
+                  <div key={follower.followingId}>
+                    {follower.following.user.name}
+                  </div>
+                ))
+            )}
           </CardContent>
         </Card>
       </TabsContent>

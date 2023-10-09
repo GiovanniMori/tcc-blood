@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { redirect, useParams } from "next/navigation";
 import Follows from "@/components/follows";
+import { Button } from "@/components/ui/button";
 
 export default async function Home({ params }: { params: { id: string } }) {
   const donor = await prisma.donor.findUnique({
@@ -56,9 +57,11 @@ export default async function Home({ params }: { params: { id: string } }) {
         </div>
       </div>
       <div className="flex flex-col gap-2 col-span-2 ">
-        <div className="md:hidden flex gap-2 justify-between">
+        <div className="md:hidden flex gap-2 justify-between items-center">
           <div>Amigos</div>
-          <Link href="/perfil/1">Adicionar amigos</Link>
+          <Button asChild>
+            <Link href="/amigos">Adicionar amigos</Link>
+          </Button>
         </div>
         <Follows donor={donor} />
       </div>

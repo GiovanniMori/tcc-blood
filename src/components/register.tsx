@@ -1,6 +1,6 @@
-"use client"
-import React from "react"
-import { Button } from "@/components/ui/button"
+"use client";
+import React from "react";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -9,19 +9,19 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
+} from "@/components/ui/form";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 
-import { Input } from "@/components/ui/input"
-import { registerSchema } from "@/schemas/register"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { Input } from "@/components/ui/input";
+import { registerSchema } from "@/schemas/register";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Card,
   CardContent,
@@ -29,33 +29,34 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import axios from "axios"
-import { useRouter } from "next/navigation"
+} from "@/components/ui/card";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { MaskCPF } from "@/utils/cpf-mask";
 
 export default function Register() {
-  const router = useRouter()
+  const router = useRouter();
   const form = useForm<registerSchema>({
     resolver: zodResolver(registerSchema),
     defaultValues: {},
-  })
+  });
 
   function handleFinishRegister(data: registerSchema) {
     axios
       .post("/api/user", data)
       .then((response) => {
-        router.refresh()
+        router.refresh();
         // do something with the response
       })
       .catch((error) => {
-        console.log(error)
+        console.log(error);
         // handle the error
-      })
+      });
   }
   // useEffect(() => {
   //   form.setValue("name", user?.firstName || "")
   // }, [form, user])
-  console.log(form.formState.errors)
+  console.log(form.formState.errors);
 
   return (
     <Card className="md:w-[75vw] lg:w-[45vw]">
@@ -97,7 +98,11 @@ export default function Register() {
                   <FormItem>
                     <FormLabel>CPF</FormLabel>
                     <FormControl>
-                      <Input placeholder="xxx.xxx.xxx-xx" {...field} />
+                      <Input
+                        placeholder="xxx.xxx.xxx-xx"
+                        {...field}
+                        value={MaskCPF(field.value)}
+                      />
                     </FormControl>
                     {/* <FormDescription>Obrigatório</FormDescription> */}
                     <FormMessage />
@@ -121,9 +126,6 @@ export default function Register() {
                         <SelectContent>
                           <SelectItem value="MALE">Masculino</SelectItem>
                           <SelectItem value="FEMALE">Feminino</SelectItem>
-                          <SelectItem value="PREFER_NOT_TO_SAY">
-                            Prefiro não dizer
-                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -168,5 +170,5 @@ export default function Register() {
       </CardContent>
       <CardFooter></CardFooter>
     </Card>
-  )
+  );
 }
