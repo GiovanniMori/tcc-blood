@@ -62,7 +62,7 @@ model Appointment {
 model User {
   id           String      @id @unique
   createdAt    DateTime    @default(now()) @map("created_at")
-  updatedAt    DateTime    @default(now()) @map("updated_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
   email        String      @unique
   name         String      @db.VarChar(255)
   role         UserRole    @default(ADMIN)
@@ -110,6 +110,9 @@ model Mission {
   name        String
   description String
   progress    Int
+  level       Int
+  limit       Int
+  lastUpdate  DateTime @updatedAt @map("last_update")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @default(now()) @map("updated_at")
   donor       Donor[]

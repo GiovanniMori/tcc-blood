@@ -15,11 +15,11 @@ export async function GET(request: NextRequest) {
   const donor = await getDonor();
   const donors = await prisma.donor.findMany({
     where: {
-      NOT: {
-        user: {
-          id: donor!.id,
-        },
-      },
+      // NOT: {
+      //   user: {
+      //     id: donor!.id,
+      //   },
+      // },
       OR: [
         {
           nickname: {
