@@ -43,12 +43,6 @@ export default async function NavbarLinks() {
       >
         Missōes
       </Link>
-      <Link
-        href="/perfil"
-        className="text-sm font-medium transition-colors hover:text-primary"
-      >
-        Perfil
-      </Link>
     </div>
   );
 }

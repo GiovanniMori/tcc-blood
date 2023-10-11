@@ -1,9 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs";
 import prisma from "@/lib/prisma";
-import { registerSchema } from "@/schemas/register";
-import { currentUser } from "@clerk/nextjs/server";
-import { generateNickname } from "@/utils/generate-nickname";
 import { PaginatedResponse } from "@/types/paginatedResponse";
 import { Hemocenter } from "@prisma/client";
 

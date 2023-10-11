@@ -15,7 +15,7 @@ export default async function RootLayout({
       },
     });
     if (!donor) {
-      redirect("/register");
+      redirect("/regis  ter");
     }
   }
   return <>{children}</>;

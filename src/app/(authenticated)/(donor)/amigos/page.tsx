@@ -25,6 +25,7 @@ import { useDebounce } from "use-debounce";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
+
 interface getUserProps {
   pageNumber: number;
   user: string;

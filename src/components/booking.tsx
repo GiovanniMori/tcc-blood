@@ -36,7 +36,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { toast } from "@/components/ui/use-toast";
+import { toast, useToast } from "@/components/ui/use-toast";
 import {
   Card,
   CardContent,
@@ -47,25 +47,85 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { donateSchema } from "@/schemas/donate";
-import { Appointment, Donor, Hemocenter, User } from "@prisma/client";
+import { Appointment, Donor, Gender, Hemocenter, User } from "@prisma/client";
 import { Input } from "./ui/input";
 import { donorWithUser } from "@/types/donorWithUser";
+import { PaginationState } from "@tanstack/react-table";
+import { useDebounce } from "use-debounce";
+import { PaginatedResponse } from "@/types/paginatedResponse";
+import { useQuery } from "@tanstack/react-query";
+import { SelectSingleEventHandler } from "react-day-picker";
+import { paginatedProps } from "@/types/paginationProps";
+import { MaskCPF } from "@/utils/cpf-mask";
 
-interface BookingProps {
-  donor: donorWithUser;
-  hemocenters: Hemocenter[];
-  disabledDates: Date[];
+async function getHemocenter({
+  pageNumber = 0,
+  pageSize = 10,
+}: paginatedProps) {
+  const res = await fetch(
+    `/api/hemocenters?page_size=${pageSize}&page_number=${pageNumber}`
+  );
+  const response: PaginatedResponse<Hemocenter> = await res.json();
+  return response;
 }
-export function Booking({ donor, hemocenters, disabledDates }: BookingProps) {
-  const [date, setDate] = React.useState<Date>();
-  const form = useForm<donateSchema>({
+async function getAvailableDates({
+  pageNumber = 0,
+  pageSize = 10,
+  hemocenter_id,
+}: paginatedProps & { hemocenter_id: string }) {
+  const res = await fetch(
+    `/api/hemocenters/dates?hemocenter_id=${hemocenter_id}`
+  );
+  const response: PaginatedResponse<Date> = await res.json();
+  return response;
+}
+
+const PAGE_SIZE = 10;
+
+export function Booking({ donor }: { donor: donorWithUser }) {
+  const { toast } = useToast();
+  const { formState, getValues, watch, setValue } = useForm<donateSchema>({
     resolver: zodResolver(donateSchema),
-    defaultValues: {},
   });
-  const minDate = new Date();
-  console.log(disabledDates);
+
+  const date = watch(`date`);
+  const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: PAGE_SIZE,
+  });
+
+  const pagination = useMemo(
+    () => ({
+      pageIndex,
+      pageSize,
+    }),
+    [pageIndex, pageSize]
+  );
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["hemocenters", pagination],
+    queryFn: () =>
+      getHemocenter({
+        pageNumber: pagination.pageIndex,
+        pageSize: pagination.pageSize,
+      }),
+  });
+
+  const { data: HemocenterAvailableDates } = useQuery({
+    queryKey: ["HemocenterAvailableDates", pagination],
+    queryFn: () =>
+      getAvailableDates({
+        pageNumber: pagination.pageIndex,
+        pageSize: pagination.pageSize,
+        hemocenter_id: `1`,
+      }),
+  });
+  function handleNextPage() {
+    setPagination({ ...pagination, pageIndex: pageIndex + 1 });
+  }
+
   function handleBooking() {
     toast({
       title: "Seu agendamento foi confirmado!",
@@ -77,18 +137,25 @@ export function Booking({ donor, hemocenters, disabledDates }: BookingProps) {
     });
   }
 
+  function handleHemocenterChange(value: string) {}
+  function handleDaySelected(value: SelectSingleEventHandler) {}
+
   return (
     <div className="flex flex-col gap-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card>
+      <div className="grid grid-cols-1 lg:grid-cols-10 gap-4">
+        <Card className="lg:col-span-3">
           <CardHeader>
             <CardTitle>Seus dados</CardTitle>
             <CardDescription>{donor.user.name}</CardDescription>
           </CardHeader>
           <CardContent>
-            <p>CPF: {donor.cpf}</p>
+            <p>CPF: {MaskCPF(donor.cpf)}</p>
             <p>Email: {donor.user.email}</p>
-            <p>Sexo: {donor.gender}</p>
+            {donor.gender && (
+              <p>
+                Sexo: {donor.gender === Gender.MALE ? "Masculino" : "Feminino"}
+              </p>
+            )}
           </CardContent>
           <CardFooter className="flex justify-end  ">
             <Button variant="secondary" asChild>
@@ -96,59 +163,57 @@ export function Booking({ donor, hemocenters, disabledDates }: BookingProps) {
             </Button>
           </CardFooter>
         </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Postos</CardTitle>
-            <CardDescription>Escolha o posto mais próximo</CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-8">
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Ver postos disponíveis" />
-              </SelectTrigger>
-              <SelectContent>
-                {hemocenters.map((hemocenter) => (
-                  <>
-                    <SelectItem value={hemocenter.id}>
+        {data && (
+          <Card className="lg:col-span-7 ">
+            <CardHeader>
+              <CardTitle>Postos</CardTitle>
+              <CardDescription>Escolha o posto mais próximo</CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-8">
+              <Select onValueChange={(value) => handleHemocenterChange(value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Ver postos disponíveis" />
+                </SelectTrigger>
+                <SelectContent>
+                  {data.data.map((hemocenter) => (
+                    <SelectItem value={hemocenter.id} key={hemocenter.id}>
                       {hemocenter.name}
                     </SelectItem>
-                  </>
-                ))}
-              </SelectContent>
-            </Select>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant={"outline"}
-                  className={cn(
-                    " justify-start text-left font-normal",
-                    !date && "text-muted-foreground"
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date ? format(date, "PPP") : <span>Pick a date</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  fromDate={new Date()}
-                  locale={ptBR}
-                  onSelect={setDate}
-                  disabled={disabledDates}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
-            <Input type="time" step="1800" />
-          </CardContent>
-          <CardFooter className="flex justify-end  ">
-            <Button variant="default" onClick={handleBooking}>
-              Confirmar agendamento
-            </Button>
-          </CardFooter>
-        </Card>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      " justify-start text-left font-normal",
+                      !date && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {date ? format(date, "PPP") : <span>Escolha uma data</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    fromDate={new Date()}
+                    locale={ptBR}
+                    onSelect={(e) => setValue("date", e!)}
+                    // disabled={disabledDates}
+                  />
+                </PopoverContent>
+              </Popover>
+            </CardContent>
+            <CardFooter className="flex justify-end  ">
+              <Button variant="default" onClick={handleBooking}>
+                Confirmar agendamento
+              </Button>
+            </CardFooter>
+          </Card>
+        )}
       </div>
     </div>
   );

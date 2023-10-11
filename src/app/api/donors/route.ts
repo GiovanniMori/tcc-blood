@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { PaginatedResponse } from "@/types/paginatedResponse";
 import { Donor } from "@prisma/client";
 import { donorWithUser } from "@/types/donorWithUser";
+import { getDonor } from "@/service/donor";
 
 export const dynamic = "force-dynamic";
 
@@ -11,8 +12,14 @@ export async function GET(request: NextRequest) {
   const page_size = searchParams.get("page_size");
   const page_number = searchParams.get("page_number");
   const user = searchParams.get("user");
+  const donor = await getDonor();
   const donors = await prisma.donor.findMany({
     where: {
+      // NOT: {
+      //   user: {
+      //     id: donor!.id,
+      //   },
+      // },
       OR: [
         {
           nickname: {

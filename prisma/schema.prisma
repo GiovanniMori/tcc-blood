@@ -14,28 +14,37 @@ generator erd {
 
 enum UserRole {
   ADMIN
-  DONOR
   MOD
-  SPONSOR
 }
 
 enum Gender {
   MALE
   FEMALE
-  PREFER_NOT_TO_SAY
 }
 
 model Hemocenter {
-  id          String        @id @default(uuid())
-  name        String
-  address     String
-  startHour   String        @map("start_hour")
-  endHour     String        @map("end_hour")
-  maxCapacity Int           @map("max_capacity")
-  createdAt   DateTime      @default(now()) @map("created_at")
-  updatedAt   DateTime      @updatedAt @map("updated_at")
-  appointment Appointment[]
-  workers     User[]
+  id              String           @id @default(uuid())
+  name            String
+  address         String
+  startHour       DateTime         @map("start_hour")
+  endHour         DateTime         @map("end_hour")
+  interval        Int
+  maxCapacity     Int              @map("max_capacity")
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+  appointment     Appointment[]
+  workers         User[]
+  bloodTypeStocks BloodTypeStock[]
+}
+
+model BloodTypeStock {
+  id           String     @id @default(uuid())
+  hemocenter   Hemocenter @relation(fields: [hemocenterId], references: [id])
+  hemocenterId String
+  bloodType    BloodType  @map("blood_type")
+  percentage   Float
+
+  @@index([hemocenterId])
 }
 
 model Appointment {
@@ -53,10 +62,10 @@ model Appointment {
 model User {
   id           String      @id @unique
   createdAt    DateTime    @default(now()) @map("created_at")
-  updatedAt    DateTime    @default(now()) @map("updated_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
   email        String      @unique
   name         String      @db.VarChar(255)
-  role         UserRole    @default(DONOR)
+  role         UserRole    @default(ADMIN)
   Sponsor      Sponsor?
   Donor        Donor?
   Hemocenter   Hemocenter? @relation(fields: [hemocenterId], references: [id])
@@ -68,16 +77,18 @@ model User {
 model Donor {
   id               String        @id @map("id")
   nickname         String        @unique
-  user             User          @relation(fields: [id], references: [id], onDelete: Cascade)
   lastDonationDate DateTime?     @map("last_donation_date")
   cpf              String        @unique
   points           Int           @default(0)
+  bloodType        BloodType?    @map("blood_type")
+  user             User          @relation(fields: [id], references: [id], onDelete: Cascade)
+  referralBy       String?       @map("referral_by")
   gender           Gender
+  birthDate        DateTime?     @map("birth_date")
   appointments     Appointment[]
   Voucher          Voucher[]
   followers        Follows[]     @relation("following")
   following        Follows[]     @relation("follower")
-  bloodType        BloodType     @default(UKNOWN) @map("blood_type")
   Mission          Mission[]
 
   @@index([id])
@@ -99,6 +110,9 @@ model Mission {
   name        String
   description String
   progress    Int
+  level       Int
+  limit       Int
+  lastUpdate  DateTime @updatedAt @map("last_update")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @default(now()) @map("updated_at")
   donor       Donor[]
@@ -149,5 +163,4 @@ enum BloodType {
   AB_POSITIVE
   AB_NEGATIVE
   O_POSITIVE
-  UKNOWN
 }
