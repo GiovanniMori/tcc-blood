@@ -20,6 +20,7 @@
     "@clerk/localizations": "^1.24.1",
     "@clerk/nextjs": "^4.23.2",
     "@clerk/themes": "^1.7.5",
+    "@faker-js/faker": "^8.1.0",
     "@hookform/resolvers": "^3.3.0",
     "@prisma/client": "^5.4.1",
     "@radix-ui/react-accordion": "^1.1.2",
