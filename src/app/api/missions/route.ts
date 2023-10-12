@@ -41,7 +41,7 @@ export async function POST(request: Request) {
           id: user.id,
           name: data.name,
           email: user.emailAddresses[0].emailAddress,
-          Donor: {
+          donor: {
             create: {
               cpf: data.cpf.replaceAll(".", "").replaceAll("-", ""),
               gender: data.gender,

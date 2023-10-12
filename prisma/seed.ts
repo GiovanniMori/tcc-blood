@@ -37,6 +37,7 @@ async function main() {
     await prisma.user.create({
       data: {
         email: fakerPT_BR.internet.email(),
+        id: fakerPT_BR.string.uuid(),
         name: fakerPT_BR.person.firstName(),
         donor: {
           create: {

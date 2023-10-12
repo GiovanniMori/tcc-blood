@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     await prisma.user.update({
       where: { id: donor.id },
       data: {
-        Donor: {
+        donor: {
           update: {
             where: {
               id: donor.id,

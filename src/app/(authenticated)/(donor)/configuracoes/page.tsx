@@ -8,8 +8,8 @@ export default async function SettingsProfilePage() {
       id: userId!,
     },
     include: {
-      Donor: true,
-      Sponsor: true,
+      donor: true,
+      sponsor: true,
     },
   });
   return <ProfileForm user={user!} />;
