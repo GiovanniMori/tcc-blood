@@ -24,7 +24,7 @@ import { getDonor } from "@/service/donor";
 export default async function UserNavbar() {
   const donor = await getDonor();
   return (
-    <div className="hidden sm:flex">
+    <div className="flex flex-col">
       {donor && (
         <>
           <Popover>
@@ -34,7 +34,7 @@ export default async function UserNavbar() {
                 <AvatarFallback>{donor!.user.name[0]}</AvatarFallback>
               </Avatar>
             </PopoverTrigger>
-            <PopoverContent>
+            <PopoverContent className="w-fit">
               <div className="grid gap-4">
                 <div className="space-y-2">
                   <h4 className="font-medium leading-none">

@@ -3,19 +3,20 @@ import { getUser } from "@/service/user";
 import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
 import React from "react";
+import UserNavbar from "./user-navbar";
 
 export default async function NavbarLinks() {
   const user = await getUser();
 
   return (
-    <div className="flex gap-4">
+    <div className="flex flex-col md:flex-row gap-4">
       {user && user.role === "ADMIN" && (
         <>
           <Link
-            href="/sponsor"
+            href="/patrocine"
             className="text-sm font-medium transition-colors hover:text-primary"
           >
-            Patrocinadores
+            Patrocine
           </Link>
           <Link
             href="/admin"
