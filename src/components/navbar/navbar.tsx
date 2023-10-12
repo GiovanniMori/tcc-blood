@@ -33,7 +33,6 @@ export default function Navbar() {
             </SheetHeader>
             <div className="px-8">
               <NavbarLinks />
-              <UserNavbar />
             </div>
           </SheetContent>
         </Sheet>

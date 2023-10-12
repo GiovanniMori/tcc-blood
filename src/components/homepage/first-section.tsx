@@ -1,12 +1,12 @@
-import React from "react"
-import { motion } from "framer-motion"
-import colors from "tailwindcss/colors"
-import { Button } from "../ui/button"
-import Link from "next/link"
-import { useDbUser } from "@/hooks/useDbUser"
+import React from "react";
+import { motion } from "framer-motion";
+import colors from "tailwindcss/colors";
+import { Button } from "../ui/button";
+import Link from "next/link";
+import { useDbUser } from "@/hooks/useDbUser";
 
 function FirstSection() {
-  const user = useDbUser()
+  const user = useDbUser();
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 justify-center items-center">
       <motion.span
@@ -599,7 +599,7 @@ function FirstSection() {
         />
       </motion.svg>
     </div>
-  )
+  );
 }
 
-export default FirstSection
+export default FirstSection;
