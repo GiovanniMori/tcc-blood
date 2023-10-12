@@ -5,19 +5,15 @@ import { registerSchema } from "@/schemas/register";
 import { getUser } from "@/service/user";
 import { redeemSchema } from "@/schemas/reedem";
 import generateVoucherCode from "@/utils/generate-voucher";
+import { getDonor } from "../user/donor";
 
 export async function POST(request: Request) {
-  const user = await getUser();
+  const donor = await getDonor();
 
-  if (!user) {
+  if (!donor) {
     return new Response("Unauthorized", { status: 401 });
   }
-  if (user.role !== "DONOR") {
-    return new Response("Unauthorized", { status: 401 });
-  }
-  const donor = await prisma.donor.findFirstOrThrow({
-    where: { id: user.id },
-  });
+
   try {
     const data = redeemSchema.parse(await request.json());
     const reward = await prisma.reward.findFirstOrThrow({
@@ -26,12 +22,12 @@ export async function POST(request: Request) {
     });
     // points: user.points - reward.points
     await prisma.user.update({
-      where: { id: user.id },
+      where: { id: donor.id },
       data: {
         Donor: {
           update: {
             where: {
-              id: user.id,
+              id: donor.id,
             },
             data: {
               points: donor.points - reward.points,

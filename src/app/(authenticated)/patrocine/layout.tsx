@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getUser } from "@/service/user";
+import { getSponsor } from "@/service/sponsor";
 
 export const dynamic = "force-dynamic";
 
@@ -8,9 +9,9 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await getUser();
+  const sponsor = await getSponsor();
 
-  if (user?.role !== "SPONSOR" && user?.role !== "ADMIN") {
+  if (!sponsor) {
     redirect("/");
   }
   return <>{children}</>;

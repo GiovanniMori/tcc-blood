@@ -24,9 +24,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning>
-      <body className={inter.className}>
-        <ClerkProvider localization={ptBR}>
+    <ClerkProvider localization={ptBR}>
+      <html lang="pt-BR" suppressHydrationWarning>
+        <body className={inter.className}>
           <ReactQueryProvider>
             <UserContextProvider>
               <ThemeProvider
@@ -47,8 +47,8 @@ export default function RootLayout({
               <Toaster />
             </UserContextProvider>
           </ReactQueryProvider>
-        </ClerkProvider>
-      </body>
-    </html>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
