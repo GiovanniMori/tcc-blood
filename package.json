@@ -85,7 +85,6 @@
     "@mermaid-js/mermaid-cli": "^10.4.0",
     "@tanstack/react-query-devtools": "^4.33.0",
     "encoding": "^0.1.13",
-    "prisma": "latest",
     "prisma-erd-generator": "^1.11.1",
     "zod-prisma": "^0.5.4"
   }
