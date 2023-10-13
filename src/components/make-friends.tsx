@@ -1,6 +1,6 @@
 export default function MakeFriends() {
   return (
-    <div className="flex flex-col items-center text-center max-w-xs gap-2">
+    <div className="flex flex-col items-center text-center gap-2 max-w-xs ">
       <img src={"/friends.svg"} alt="Amigos" />
       <p className="text-lg font-light leading-relaxed">
         Doar sangue com amigos ao seu lado torna o ato ainda mais especial e
