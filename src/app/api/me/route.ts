@@ -15,8 +15,8 @@ export async function GET() {
         id: userId,
       },
       include: {
-        Donor: true,
-        Sponsor: true,
+        donor: true,
+        sponsor: true,
       },
     });
     return NextResponse.json({ user });

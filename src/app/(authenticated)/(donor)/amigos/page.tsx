@@ -92,7 +92,7 @@ export default function Home() {
 
   return (
     <main className="flex flex-col gap-8 ">
-      <h1 className="text-3xl font-bold text-black ">Procurar amigos</h1>
+      <h1 className="text-3xl font-bold">Procurar amigos</h1>
       <Input
         onChange={(e) => setText(e.currentTarget.value)}
         placeholder="Nome ou nome de usuário"

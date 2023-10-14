@@ -145,8 +145,8 @@ export default function Follows({ donor }: { donor: donor }) {
               </Dialog>
             </CardContent>
           ) : (
-            <CardFooter>
-              <div>Você não tem nenhum seguidor ainda</div>
+            <CardFooter className="pt-6 flex justify-center">
+              Você não tem nenhum seguidor ainda
             </CardFooter>
           )}
         </Card>

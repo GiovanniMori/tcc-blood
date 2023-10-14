@@ -32,7 +32,7 @@ model Hemocenter {
   maxCapacity     Int              @map("max_capacity")
   createdAt       DateTime         @default(now()) @map("created_at")
   updatedAt       DateTime         @updatedAt @map("updated_at")
-  appointment     Appointment[]
+  appointments    Appointment[]
   workers         User[]
   bloodTypeStocks BloodTypeStock[]
 }
@@ -52,7 +52,7 @@ model Appointment {
   hemocenter   Hemocenter @relation(fields: [hemocenterId], references: [id])
   hemocenterId String     @map("hemocenter_id")
   date         DateTime
-  Donor        Donor?     @relation(fields: [donorUserId], references: [id])
+  donor        Donor?     @relation(fields: [donorUserId], references: [id])
   donorUserId  String?
 
   @@index([donorUserId])
@@ -66,8 +66,8 @@ model User {
   email        String      @unique
   name         String      @db.VarChar(255)
   role         UserRole    @default(ADMIN)
-  Sponsor      Sponsor?
-  Donor        Donor?
+  sponsor      Sponsor?
+  donor        Donor?
   Hemocenter   Hemocenter? @relation(fields: [hemocenterId], references: [id])
   hemocenterId String?
 
@@ -86,10 +86,10 @@ model Donor {
   gender           Gender
   birthDate        DateTime?     @map("birth_date")
   appointments     Appointment[]
-  Voucher          Voucher[]
+  vouchers         Voucher[]
   followers        Follows[]     @relation("following")
   following        Follows[]     @relation("follower")
-  Mission          Mission[]
+  missions         Mission[]
 
   @@index([id])
 }
@@ -115,17 +115,15 @@ model Mission {
   lastUpdate  DateTime @updatedAt @map("last_update")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @default(now()) @map("updated_at")
-  donor       Donor[]
+  donors      Donor[]
 }
 
 model Sponsor {
-  name      String
-  email     String    @unique
   id        String    @id
   user      User      @relation(fields: [id], references: [id])
   createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @default(now()) @map("updated_at")
-  Voucher   Voucher[]
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  vouchers  Voucher[]
 
   @@index([id])
 }
@@ -133,10 +131,10 @@ model Sponsor {
 model Reward {
   id          String    @id @default(uuid())
   name        String
-  description String
-  imageUrl    String
+  description String    @db.LongText()
+  imageUrl    String    @map("image_url")
   points      Int
-  Voucher     Voucher[]
+  vouchers    Voucher[]
 }
 
 model Voucher {
@@ -145,9 +143,9 @@ model Voucher {
   generatedAt DateTime @default(now()) @map("generated_at")
   donor       Donor?   @relation(fields: [reedemedBy], references: [id])
   reedemedBy  String?  @map("reedemed_by")
-  Reward      Reward   @relation(fields: [rewardId], references: [id])
+  reward      Reward   @relation(fields: [rewardId], references: [id])
   rewardId    String   @map("reward_id")
-  Sponsor     Sponsor  @relation(fields: [sponsorId], references: [id])
+  sponsor     Sponsor  @relation(fields: [sponsorId], references: [id])
   sponsorId   String   @map("sponsor_id")
 
   @@index([sponsorId])
