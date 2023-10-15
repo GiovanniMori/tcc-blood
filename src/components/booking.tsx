@@ -229,8 +229,7 @@ export function Booking({ donor }: { donor: donorWithUser }) {
       </div>
     </div>
   );
-
-  async function handleBooking() {
+ function handleBooking() {
     const DonorId = donor.id
     const DonorName = donor.user.name
       axios.post("/api/doar", {donorId: DonorId, donor: DonorName, dateTime: date, hemocenterId: selectedHemocenter}).then((res) => {

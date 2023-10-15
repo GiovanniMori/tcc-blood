@@ -11,12 +11,6 @@ export async function POST(req: Request, res: NextApiResponse) {
   const data = await req.json();
   
   try {
-    console.log(data)
-
-    const hemocenter = await prisma.hemocenter.findMany({
-      where({id: data.hemocenterId})
-    })
-
     const appointment = await prisma.appointment.create({
       data : {
         date: data.dateTime,
@@ -25,11 +19,7 @@ export async function POST(req: Request, res: NextApiResponse) {
         hemocenterId: data.hemocenterId
       }
     });
-    // const date = await prisma.appointment.findUnique({
-    //   where: { date: data.date},
-    // });
     return NextResponse.json(appointment);
-
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "Internal server error" });
