@@ -59,6 +59,22 @@ import { useQuery } from "@tanstack/react-query";
 import { SelectSingleEventHandler } from "react-day-picker";
 import { paginatedProps } from "@/types/paginationProps";
 import { MaskCPF } from "@/utils/cpf-mask";
+import axios from "axios";
+import { Value } from "@radix-ui/react-select";
+
+
+type HemocenterProps = {
+  id: string;
+  name: string;
+  address: string;
+  startHour: Date;
+  endHour: Date;
+  interval: number;
+  maxCapacity: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 
 async function getHemocenter({
   pageNumber = 0,
@@ -126,19 +142,15 @@ export function Booking({ donor }: { donor: donorWithUser }) {
     setPagination({ ...pagination, pageIndex: pageIndex + 1 });
   }
 
-  function handleBooking() {
-    toast({
-      title: "Seu agendamento foi confirmado!",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">oi</code>
-        </pre>
-      ),
-    });
-  }
+
+  
 
   function handleHemocenterChange(value: string) {}
   function handleDaySelected(value: SelectSingleEventHandler) {}
+
+  const today = new Date(Date.now());
+   const [selectedHemocenter, setSelectedHemocenter] = useState<any>()
+
 
   return (
     <div className="flex flex-col gap-4">
@@ -170,7 +182,7 @@ export function Booking({ donor }: { donor: donorWithUser }) {
               <CardDescription>Escolha o posto mais próximo</CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col gap-8">
-              <Select onValueChange={(value) => handleHemocenterChange(value)}>
+              <Select  onValueChange={(value) => setSelectedHemocenter(value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Ver postos disponíveis" />
                 </SelectTrigger>
@@ -217,4 +229,20 @@ export function Booking({ donor }: { donor: donorWithUser }) {
       </div>
     </div>
   );
+
+  async function handleBooking() {
+    const DonorId = donor.id
+    const DonorName = donor.user.name
+      axios.post("/api/doar", {donorId: DonorId, donor: DonorName, dateTime: date, hemocenterId: selectedHemocenter}).then((res) => {
+        console.log(DonorId,DonorName, date, selectedHemocenter)
+        toast({
+          title: "Seu agendamento foi confirmado!",
+          description: (
+            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+              <code className="text-white">Deu bom</code>
+            </pre>
+          ),
+        });
+    });
+  }
 }
