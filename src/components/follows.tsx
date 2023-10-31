@@ -62,7 +62,7 @@ export default function Follows({ donor }: { donor: donor }) {
       </TabsList>
       <TabsContent value="Seguindo">
         <Card className="pt-6">
-          <CardContent>
+          <CardContent className="flex justify-center">
             {donor.following.length < 1 ? (
               <MakeFriends />
             ) : (
