@@ -8,9 +8,6 @@ export default async function Home() {
     where: {
       id: "819e4461-6dfe-4b80-a986-0010aa0bbcae",
     },
-    include: {
-      bloodTypeStocks: true,
-    },
   });
   // if (!hemocenter) {
   //   redirect("/hemocentros");

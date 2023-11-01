@@ -5,3 +5,13 @@ export type donorWithUser = Prisma.DonorGetPayload<{
     user: true;
   };
 }>;
+
+export type appointmentDonorWithUser = Prisma.AppointmentGetPayload<{
+  include: {
+    donor: {
+      include: {
+        user: true;
+      };
+    };
+  };
+}>;

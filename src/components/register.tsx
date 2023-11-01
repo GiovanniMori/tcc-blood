@@ -145,17 +145,33 @@ export default function Register() {
                         defaultValue={field.value}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="Selecione seu tipo sanguíneo" />
+                          <SelectValue placeholder="Selecione o seu tipo sanguíneo" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="A+">A+ (positivo)</SelectItem>
-                          <SelectItem value="A-">A- (negativo)</SelectItem>
-                          <SelectItem value="B+">B+ (positivo)</SelectItem>
-                          <SelectItem value="B-">B- (negativo)</SelectItem>
-                          <SelectItem value="AB+">AB+ (positivo)</SelectItem>
-                          <SelectItem value="AB-">AB- (negativo)</SelectItem>
-                          <SelectItem value="O+">O+ (positivo)</SelectItem>
-                          <SelectItem value="O-">O- (negativo)</SelectItem>
+                          <SelectItem value="A_POSITIVE">
+                            A+ (positivo)
+                          </SelectItem>
+                          <SelectItem value="A_NEGATIVE">
+                            A- (negativo)
+                          </SelectItem>
+                          <SelectItem value="B_POSITIVE">
+                            B+ (positivo)
+                          </SelectItem>
+                          <SelectItem value="B_NEGATIVE">
+                            B- (negativo)
+                          </SelectItem>
+                          <SelectItem value="AB_POSITIVE">
+                            AB+ (positivo)
+                          </SelectItem>
+                          <SelectItem value="AB_NEGATIVE">
+                            AB- (negativo)
+                          </SelectItem>
+                          <SelectItem value="O_POSITIVE">
+                            O+ (positivo)
+                          </SelectItem>
+                          <SelectItem value="O_NEGATIVE">
+                            O- (negativo)
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </FormControl>

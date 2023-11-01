@@ -1,23 +1,15 @@
 import { Metadata } from "next";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CalendarDateRangePicker } from "./components/date-range-picker";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Overview } from "./components/overview";
-import { RecentSales } from "./components/recent-sales";
-import { Search } from "./components/search";
-import TeamSwitcher from "./components/team-switcher";
-import { UserNav } from "./components/user-nav";
-import { MainNav } from "./components/main-nav";
+import { RecentDonations } from "./components/recent-donations";
 import prisma from "@/lib/prisma";
-import { User } from "lucide-react";
+import { CheckCircle, Database, Droplet, User } from "lucide-react";
+import { addMonths } from "date-fns";
+import { AppointmentStatus } from "@prisma/client";
+import TeamSwitcher from "./components/team-switcher";
+import { MainNav } from "./components/main-nav";
+import { Search } from "./components/search";
+import { UserNav } from "./components/user-nav";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -25,32 +17,102 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardPage() {
-  const userCount = await prisma.user.count({
+  const oneMonthAgo = addMonths(new Date(), -1);
+
+  const usersCreatedLastMonth = await prisma.user.count();
+  const usersCreated = await prisma.user.count({
     where: {
-      // createdAt: {
-      //   gte: new Date("2021-08-01"),
-      //   lte: new Date("2021-09-30"),
-      // },
+      createdAt: {
+        gte: oneMonthAgo,
+      },
     },
   });
-  const bloodTypeStocks = await prisma.bloodTypeStock.findMany();
-  const bloodTypes = bloodTypeStocks
-    .reduce((acc, curr) => {
-      return acc + curr.bloodType + ", ";
-    }, "")
-    .slice(0, -2);
+
+  const donationsGroupedByBloodType = await prisma.bloodDonation.groupBy({
+    by: "bloodType",
+    _sum: {
+      volume: true,
+    },
+  });
+  const donations = await prisma.bloodDonation.findMany();
+  const donationsLastMonth = await prisma.bloodDonation.findMany({
+    where: {
+      createdAt: {
+        gte: oneMonthAgo,
+      },
+    },
+  });
+  const currentDateTime = new Date();
+  const stock = await prisma.bloodDonation.findMany({
+    where: {
+      expiration: {
+        gte: currentDateTime,
+      },
+    },
+  });
+  const totalBloodDonationsVolume = stock.reduce(
+    (total, donation) => total + donation.volume,
+    0
+  );
+  const appointmentsSuccess = await prisma.appointment.count({
+    where: {
+      status: {
+        equals: AppointmentStatus.ACCEPTED,
+      },
+    },
+  });
+  const appointmentsSuccessLastMonth = await prisma.appointment.count({
+    where: {
+      status: {
+        equals: AppointmentStatus.ACCEPTED,
+      },
+      createdAt: {
+        gte: oneMonthAgo,
+      },
+    },
+  });
+
+  const totalVolume = donations.reduce(
+    (acc, donation) => acc + donation.volume,
+    0
+  );
+  const totalVolumeLastMonth = donationsLastMonth.reduce(
+    (acc, donation) => acc + donation.volume,
+    0
+  );
+
+  const data = donationsGroupedByBloodType.map((donation) => ({
+    blood_type: donation.bloodType,
+    total: donation._sum.volume,
+  }));
+
+  const percentage = {
+    users: (
+      ((usersCreated - usersCreatedLastMonth) / usersCreatedLastMonth) *
+      100
+    ).toFixed(2),
+    volume: (
+      ((totalVolume - totalVolumeLastMonth) / totalVolumeLastMonth) *
+      100
+    ).toFixed(2),
+    appointments: (
+      ((appointmentsSuccess - appointmentsSuccessLastMonth) /
+        appointmentsSuccessLastMonth) *
+      100
+    ).toFixed(2),
+  };
   return (
     <div className="flex-col flex">
       {/* <div className="border-b">
-          <div className="flex h-16 items-center px-4">
-            <TeamSwitcher />
-            <MainNav className="mx-6" />
-            <div className="ml-auto flex items-center space-x-4">
-              <Search />
-              <UserNav />
-            </div>
+        <div className="flex h-16 items-center px-4">
+          <TeamSwitcher />
+          <MainNav className="mx-6" />
+          <div className="ml-auto flex items-center space-x-4">
+            <Search />
+            <UserNav />
           </div>
-        </div> */}
+        </div>
+      </div> */}
       <div className="flex flex-col gap-4">
         <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -59,87 +121,54 @@ export default async function DashboardPage() {
               <CardTitle className="text-sm font-medium">
                 Novos usuários
               </CardTitle>
-              <User />
+              <User className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{userCount}</div>
+              <div className="text-2xl font-bold">{usersCreated}</div>
               <p className="text-xs text-muted-foreground">
-                +20.1% a mais que o mês passado
+                {percentage.users}% comparado com mês passado
               </p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Subscriptions
+                Doações com sucesso
               </CardTitle>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                className="h-4 w-4 text-muted-foreground"
-              >
-                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                <circle cx="9" cy="7" r="4" />
-                <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-              </svg>
+              <CheckCircle className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+2350</div>
+              <div className="text-2xl font-bold">{appointmentsSuccess}</div>
               <p className="text-xs text-muted-foreground">
-                +180.1% from last month
+                {percentage.appointments}% comparado com mês passado
               </p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Sales</CardTitle>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                className="h-4 w-4 text-muted-foreground"
-              >
-                <rect width="20" height="14" x="2" y="5" rx="2" />
-                <path d="M2 10h20" />
-              </svg>
+              <CardTitle className="text-sm font-medium">
+                Volume de Sangue Doado
+              </CardTitle>
+              <Droplet className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+12,234</div>
+              <div className="text-2xl font-bold">{totalVolume}ml</div>
               <p className="text-xs text-muted-foreground">
-                +19% from last month
+                {percentage.volume}% comparado com mês passado
               </p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Now</CardTitle>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                className="h-4 w-4 text-muted-foreground"
-              >
-                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-              </svg>
+              <CardTitle className="text-sm font-medium">
+                Estoque atual
+              </CardTitle>
+              <Database className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+573</div>
-              <p className="text-xs text-muted-foreground">
-                +201 since last hour
-              </p>
+              <div className="text-2xl font-bold">
+                {totalBloodDonationsVolume}ml
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -149,18 +178,10 @@ export default async function DashboardPage() {
               <CardTitle>Visão geral</CardTitle>
             </CardHeader>
             <CardContent className="pl-2">
-              <Overview />
+              <Overview data={data} />
             </CardContent>
           </Card>
-          <Card className="col-span-3">
-            <CardHeader>
-              <CardTitle>Vendas Recentes</CardTitle>
-              <CardDescription>Você fez X vendas esse mês.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <RecentSales />
-            </CardContent>
-          </Card>
+          <RecentDonations />
         </div>
       </div>
     </div>

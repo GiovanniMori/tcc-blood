@@ -14,7 +14,7 @@ generator erd {
 
 enum UserRole {
   ADMIN
-  MOD
+  USER
 }
 
 enum Gender {
@@ -23,39 +23,59 @@ enum Gender {
 }
 
 model Hemocenter {
-  id              String           @id @default(uuid())
-  name            String
-  address         String
-  startHour       DateTime         @map("start_hour")
-  endHour         DateTime         @map("end_hour")
-  interval        Int
-  maxCapacity     Int              @map("max_capacity")
-  createdAt       DateTime         @default(now()) @map("created_at")
-  updatedAt       DateTime         @updatedAt @map("updated_at")
-  appointments    Appointment[]
-  workers         User[]
-  bloodTypeStocks BloodTypeStock[]
+  id            String          @id @default(uuid())
+  name          String
+  address       String
+  startHour     DateTime        @map("start_hour")
+  endHour       DateTime        @map("end_hour")
+  interval      Int
+  maxCapacity   Int             @map("max_capacity")
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime        @updatedAt @map("updated_at")
+  appointments  Appointment[]
+  workers       User[]
+  BloodDonation BloodDonation[]
 }
 
-model BloodTypeStock {
-  id           String     @id @default(uuid())
-  hemocenter   Hemocenter @relation(fields: [hemocenterId], references: [id])
-  hemocenterId String
-  bloodType    BloodType  @map("blood_type")
-  percentage   Float
-
-  @@index([hemocenterId])
+enum AppointmentStatus {
+  PENDING
+  ACCEPTED
+  CANCELED
 }
 
 model Appointment {
-  id           String     @id @default(uuid())
-  hemocenter   Hemocenter @relation(fields: [hemocenterId], references: [id])
-  hemocenterId String     @map("hemocenter_id")
-  date         DateTime
-  donor        Donor?     @relation(fields: [donorUserId], references: [id])
-  donorUserId  String?
+  id              String            @id @default(uuid())
+  hemocenter      Hemocenter        @relation(fields: [hemocenterId], references: [id])
+  hemocenterId    String            @map("hemocenter_id")
+  date            DateTime
+  donor           Donor             @relation(fields: [donorUserId], references: [id])
+  donorUserId     String
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+  status          AppointmentStatus @default(PENDING)
+  donation        BloodDonation?    @relation(fields: [bloodDonationId], references: [id])
+  bloodDonationId String?           @unique @map("blood_donation_id")
 
+  @@index([bloodDonationId])
   @@index([donorUserId])
+  @@index([hemocenterId])
+}
+
+model BloodDonation {
+  id           String       @id @default(uuid())
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+  donor        Donor        @relation(fields: [donorId], references: [id])
+  donorId      String       @map("donor_id")
+  hemocenter   Hemocenter   @relation(fields: [hemocenterId], references: [id])
+  hemocenterId String       @map("hemocenter_id")
+  bloodType    BloodType    @map("blood_type")
+  volume       Float
+  expiration   DateTime
+  verified     Boolean      @default(false)
+  appointment  Appointment?
+
+  @@index([donorId])
   @@index([hemocenterId])
 }
 
@@ -75,21 +95,22 @@ model User {
 }
 
 model Donor {
-  id               String        @id @map("id")
-  nickname         String        @unique
-  lastDonationDate DateTime?     @map("last_donation_date")
-  cpf              String        @unique
-  points           Int           @default(0)
-  bloodType        BloodType?    @map("blood_type")
-  user             User          @relation(fields: [id], references: [id], onDelete: Cascade)
-  referralBy       String?       @map("referral_by")
+  id               String          @id @map("id")
+  nickname         String          @unique
+  lastDonationDate DateTime?       @map("last_donation_date")
+  cpf              String          @unique
+  points           Int             @default(0)
+  bloodType        BloodType?      @map("blood_type")
+  user             User            @relation(fields: [id], references: [id], onDelete: Cascade)
+  referralBy       String?         @map("referral_by")
   gender           Gender
-  birthDate        DateTime?     @map("birth_date")
+  birthDate        DateTime?       @map("birth_date")
   appointments     Appointment[]
   vouchers         Voucher[]
-  followers        Follows[]     @relation("following")
-  following        Follows[]     @relation("follower")
+  followers        Follows[]       @relation("following")
+  following        Follows[]       @relation("follower")
   missions         Mission[]
+  BloodDonation    BloodDonation[]
 
   @@index([id])
 }
@@ -132,7 +153,7 @@ model Reward {
   id          String    @id @default(uuid())
   name        String
   description String    @db.LongText()
-  imageUrl    String    @map("image_url")
+  imageUrl    String?   @map("image_url")
   points      Int
   vouchers    Voucher[]
 }

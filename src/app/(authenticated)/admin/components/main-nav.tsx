@@ -24,16 +24,16 @@ export function MainNav({
         Doadores
       </Link>
       <Link
-        href="/admin/sponsors"
+        href="/admin/appointments"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
-        Patrocinadores
+        Agendamentos
       </Link>
       <Link
-        href="/admin/products"
+        href="/admin/rewards"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
-        Produtos
+        Recompensas
       </Link>
       <Link
         href="/admin/hemocenters"

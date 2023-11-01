@@ -14,12 +14,14 @@ export default async function NavbarLinks() {
         <>
           <Link
             href="/patrocine"
+            prefetch={false}
             className="text-sm font-medium transition-colors hover:text-primary"
           >
             Patrocine
           </Link>
           <Link
             href="/admin"
+            prefetch={false}
             className="text-sm font-medium transition-colors hover:text-primary"
           >
             Admin
@@ -27,19 +29,29 @@ export default async function NavbarLinks() {
         </>
       )}
       <Link
+        href="/hemocentros"
+        prefetch={false}
+        className="text-sm font-medium transition-colors hover:text-primary"
+      >
+        Hemocentros
+      </Link>
+      <Link
         href="/doar"
+        prefetch={false}
         className="text-sm font-medium transition-colors hover:text-primary"
       >
         Doar
       </Link>
       <Link
         href="/recompensas"
+        prefetch={false}
         className="text-sm font-medium transition-colors hover:text-primary"
       >
         Recompensas
       </Link>
       <Link
         href="/missoes"
+        prefetch={false}
         className="text-sm font-medium transition-colors hover:text-primary"
       >
         Missōes

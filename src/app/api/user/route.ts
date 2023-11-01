@@ -4,6 +4,8 @@ import prisma from "@/lib/prisma";
 import { registerSchema } from "@/schemas/register";
 import { currentUser } from "@clerk/nextjs/server";
 import { generateNickname } from "@/utils/generate-nickname";
+import { getDonor } from "@/service/donor";
+import { getUser } from "@/service/user";
 
 export const dynamic = "force-dynamic";
 
@@ -25,7 +27,31 @@ export async function GET(request: NextRequest) {
     totalPage: totalPages,
   });
 }
-// ...
+
+export async function PATCH(request: Request) {
+  try {
+    const user = await getUser();
+    if (!user) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+    const { id, name, email, userRole } = await request.json();
+    if (id !== user.id && user.role !== "ADMIN") {
+      return new Response("Unauthorized", { status: 401 });
+    }
+    const updatedUser = await prisma.user.update({
+      where: { id },
+      data: {
+        name,
+        email,
+        role: user.role === "ADMIN" ? userRole : user.role,
+      },
+    });
+    return NextResponse.json(updatedUser);
+  } catch (error: any) {
+    console.log(error);
+    return new Response(error.message, { status: 400 });
+  }
+}
 
 export async function POST(request: Request) {
   try {
