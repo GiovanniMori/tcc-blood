@@ -20,10 +20,10 @@ export default async function RootLayout({
     <div>
       <div className="border-b">
         <div className="flex h-16 items-center">
-          <MainNav className="mx-6" />
+          <MainNav />
         </div>
       </div>
-      <div className="flex-1 space-y-4 p-8 pt-6">{children}</div>
+      <div className="flex-1  pt-6">{children}</div>
     </div>
   );
 }

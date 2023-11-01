@@ -1,25 +1,23 @@
-"use client"
-import { ClerkProvider } from "@clerk/nextjs"
-import { useTheme } from "next-themes"
-import React from "react"
-import { dark } from "@clerk/themes"
-import { ptBR } from "@clerk/localizations"
+"use client";
+
+import { ClerkProvider } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
+import { ptBR } from "@clerk/localizations";
+import { ReactNode } from "react";
 
 export default function CustomClerkProvider({
   children,
 }: {
-  children: React.ReactNode
+  children: ReactNode;
 }) {
-  const { theme } = useTheme()
-
   return (
     <ClerkProvider
       appearance={{
-        baseTheme: theme === "dark" ? dark : dark,
+        baseTheme: dark,
       }}
       localization={ptBR}
     >
       {children}
     </ClerkProvider>
-  )
+  );
 }

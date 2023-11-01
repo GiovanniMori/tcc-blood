@@ -1,17 +1,16 @@
-"use client"
+"use client";
 
-import React, { FunctionComponent } from "react"
-import { TailSpin } from "react-loader-spinner"
+import { useTheme } from "next-themes";
+import { TailSpin } from "react-loader-spinner";
 
-function Loader() {
+export default function Loader() {
+  const { theme } = useTheme();
   return (
     <TailSpin
       height={16}
       width={16}
-      color={"#FFFFFF"}
       ariaLabel="tail-spin-loading"
+      color={theme === "dark" ? "#FFF" : "#000"}
     />
-  )
+  );
 }
-
-export default Loader

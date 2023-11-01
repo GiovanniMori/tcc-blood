@@ -3,7 +3,16 @@ import { z } from "zod";
 
 export const required_msg = "Campo obrigatório";
 export const BloodTypeEnum = z.enum(
-  ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
+  [
+    "A_POSITIVE",
+    "A_NEGATIVE",
+    "B_POSITIVE",
+    "B_NEGATIVE",
+    "AB_POSITIVE",
+    "AB_NEGATIVE",
+    "O_POSITIVE",
+    "O_NEGATIVE",
+  ],
   { required_error: required_msg }
 );
 

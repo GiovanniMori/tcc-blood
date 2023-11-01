@@ -5,7 +5,7 @@ import { registerSchema } from "@/schemas/register";
 import { getUser } from "@/service/user";
 import { redeemSchema } from "@/schemas/reedem";
 import generateVoucherCode from "@/utils/generate-voucher";
-import { getDonor } from "../user/donor";
+import { getDonor } from "@/service/donor";
 
 export async function POST(request: Request) {
   const donor = await getDonor();
