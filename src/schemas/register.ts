@@ -28,6 +28,7 @@ export const registerSchema = z.object({
   blood_type: BloodTypeEnum,
   gender: GenderEnum,
   birth_date: z.date({ required_error: required_msg }).optional(),
+  referalBy: z.string().optional(),
 });
 
 export type registerSchema = z.infer<typeof registerSchema>;
