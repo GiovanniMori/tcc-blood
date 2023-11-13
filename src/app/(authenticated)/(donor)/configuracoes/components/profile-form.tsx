@@ -47,12 +47,12 @@ export function ProfileForm({ user }: ProfileFormProps) {
 
   function onSubmit(data: userSchema) {
     toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+      title: "Você atualizou seu perfil",
+      // description: (
+      // <div>
+
+      // </div>
+      // ),
     });
   }
 
@@ -69,8 +69,8 @@ export function ProfileForm({ user }: ProfileFormProps) {
                 <Input placeholder={user.name} {...field} />
               </FormControl>
               <FormDescription>
-                This is your public display name. It can be your real name or a
-                pseudonym. You can only change this once every 30 days.
+                Esta é a sua nome de exibição público. Pode ser o seu nome real
+                ou um pseudônimo.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -86,7 +86,8 @@ export function ProfileForm({ user }: ProfileFormProps) {
                 <Input placeholder={user.email} {...field} disabled />
               </FormControl>
               <FormDescription>
-                You can manage verified email addresses in your{" "}
+                Aqui você pode gerenciar os endereços de e-mail verificados em
+                sua conta.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -108,22 +109,6 @@ export function ProfileForm({ user }: ProfileFormProps) {
             </FormItem>
           )}
         /> */}
-        <FormField
-          control={form.control}
-          name="blood_type"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input placeholder={user.email} {...field} disabled />
-              </FormControl>
-              <FormDescription>
-                You can manage verified email addresses in your{" "}
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <Button type="submit">Atualizar perfil</Button>
       </form>
     </Form>

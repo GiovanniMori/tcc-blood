@@ -23,6 +23,24 @@ export async function POST(request: Request) {
         appointment: { connect: { id: data.appointmentId } },
       },
     });
+    await prisma.donor.update({
+      where: { id: data.donorId },
+      data: {
+        points: { increment: 100 },
+        lastDonationDate: new Date(),
+      },
+    });
+    if (data.appointmentId) {
+      await prisma.appointment.update({
+        where: {
+          id: data.appointmentId,
+        },
+        data: {
+          status: "ACCEPTED",
+        },
+      });
+    }
+
     return NextResponse.json(response);
   } catch (error: any) {
     return new Response(error.message, { status: 400 });

@@ -12,15 +12,35 @@ export async function GET(request: NextRequest) {
     if (!user) {
       return new Response("Unauthorized", { status: 401 });
     }
-    const { searchParams } = new URL(request.url);
-    const date = searchParams.get("page_size");
+    const { date } = await request.json();
     const appointments = await prisma.appointment.findMany({
       where: {
-        date: "Thu Sep 14 2023 17:18:11 GMT-0300 (Brasilia Standard Time)",
+        date,
+        donorUserId: user.id,
       },
     });
     return NextResponse.json({ appointments });
   } catch {
     return NextResponse.json({ data: "Register" });
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const user = await getUser();
+    if (!user) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+    const { hemocenterId, date } = await request.json();
+    const appointment = await prisma.appointment.create({
+      data: {
+        hemocenter: { connect: { id: hemocenterId } },
+        donor: { connect: { id: user.id } },
+        date,
+      },
+    });
+    return NextResponse.json({ appointment });
+  } catch {
+    return NextResponse.json("Failed to create appointment");
   }
 }

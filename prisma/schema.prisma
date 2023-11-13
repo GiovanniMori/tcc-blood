@@ -103,6 +103,7 @@ model Donor {
   bloodType        BloodType?      @map("blood_type")
   user             User            @relation(fields: [id], references: [id], onDelete: Cascade)
   referralBy       String?         @map("referral_by")
+  referralCode     String          @default(uuid()) @map("referral_code")
   gender           Gender
   birthDate        DateTime?       @map("birth_date")
   appointments     Appointment[]
@@ -129,7 +130,7 @@ model Follows {
 model Mission {
   id          String   @id @default(uuid())
   name        String
-  description String
+  description String   @db.LongText()
   progress    Int
   level       Int
   limit       Int

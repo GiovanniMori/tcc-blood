@@ -18,10 +18,7 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
       title: "Conta",
       href: "/configuracoes",
     },
-    {
-      title: "Perfil",
-      href: "/configuracoes/perfil",
-    },
+
     {
       title: "Cupons",
       href: "/configuracoes/cupons",

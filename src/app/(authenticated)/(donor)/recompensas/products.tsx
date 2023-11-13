@@ -48,7 +48,7 @@ export default function Rewards({ reward, user }: RewardProps) {
     } else {
       toast({
         title: "Falha ao resgatar",
-        description: "Voce nao tem pontos suficientes",
+        description: "Voce não tem pontos suficientes",
       });
     }
   }
@@ -56,9 +56,9 @@ export default function Rewards({ reward, user }: RewardProps) {
     <Card>
       <CardHeader>
         <div className="flex gap-4 ">
-          <div className=" w-full   relative">
+          {/* <div className=" w-full   relative">
             <Image src="next.svg" fill alt={reward.name} />
-          </div>
+          </div> */}
           <div className="flex flex-col gap-2">
             <CardTitle>{reward.name}</CardTitle>
             <CardDescription>

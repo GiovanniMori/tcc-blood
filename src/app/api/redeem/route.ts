@@ -36,13 +36,15 @@ export async function POST(request: Request) {
         },
       },
     });
-    // const voucher = await prisma.voucher.create({
-    //   data: {
-    //     donor: { connect: { id: user.id } },
-    //     Reward: { connect: { id: data.id } },
-    //     code: generateVoucherCode(10), // generate a random string of length 10
-    //   },
-    // });
+    const voucher = await prisma.voucher.create({
+      data: {
+        donor: { connect: { id: donor.id } },
+        reward: { connect: { id: data.id } },
+        sponsor: { connect: { id: donor.id } },
+
+        code: generateVoucherCode(10), // generate a random string of length 10
+      },
+    });
 
     return NextResponse.json(true);
   } catch (error: any) {

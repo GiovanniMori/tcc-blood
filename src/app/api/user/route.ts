@@ -69,6 +69,7 @@ export async function POST(request: Request) {
           email: user.emailAddresses[0].emailAddress,
           donor: {
             create: {
+              referralBy: data.referalBy,
               cpf: data.cpf.replaceAll(".", "").replaceAll("-", ""),
               gender: data.gender,
               nickname: generateNickname(user.emailAddresses[0].emailAddress),
