@@ -93,21 +93,6 @@ export function DataTable() {
 
   const columns: ColumnDef<User>[] = [
     {
-      id: "id",
-      accessorKey: "id",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            UID
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-    },
-    {
       id: "Nome",
       accessorKey: "name",
       header: ({ column }) => {

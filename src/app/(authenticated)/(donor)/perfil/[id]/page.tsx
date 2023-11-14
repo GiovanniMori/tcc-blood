@@ -61,6 +61,20 @@ export default async function Home({ params }: { params: { id: string } }) {
   if (!donor) {
     redirect("/404");
   }
+  const donations = await prisma.bloodDonation.count({
+    where: {
+      donor: {
+        user: {
+          id: donor.id,
+        },
+      },
+    },
+  });
+  const userReferrals = await prisma.donor.count({
+    where: {
+      referralBy: donor.referralCode,
+    },
+  });
   const missions = await prisma.mission.findMany({});
 
   return (
@@ -78,10 +92,10 @@ export default async function Home({ params }: { params: { id: string } }) {
               <Calendar />
               Por aqui desde {donor.user.createdAt.toLocaleDateString(`pt-BR`)}
             </div>
-            <div className="flex gap-2 items-center">
+            {/* <div className="flex gap-2 items-center">
               <Droplet />
               {donor.bloodType}
-            </div>
+            </div> */}
           </div>
           <Link href={"/configuracoes"}>
             <Avatar className="md:w-24 md:h-24">
@@ -96,14 +110,18 @@ export default async function Home({ params }: { params: { id: string } }) {
         <div className="flex flex-col gap-4">
           <div className="text-2xl">Estatísticas</div>
           <div className="grid md:grid-cols-2  gap-4">
-            <Statistics description="4" icon={HeartPulse} title="Doações" />
             <Statistics
-              description="+40"
+              description={donations}
+              icon={HeartPulse}
+              title="Doações"
+            />
+            <Statistics
+              description={donations * 4}
               icon={HelpingHand}
               title="Possíveis vidas salvas"
             />
             <Statistics
-              description="0"
+              description={userReferrals}
               icon={Users}
               title="Usuários indicados"
             />
@@ -142,7 +160,7 @@ export default async function Home({ params }: { params: { id: string } }) {
 interface StatisticsProps {
   icon: LucideIcon;
   title: string;
-  description: string;
+  description: string | number;
 }
 function Statistics({ icon: Icon, title, description }: StatisticsProps) {
   return (

@@ -12,13 +12,13 @@ export default async function NavbarLinks() {
     <div className="flex flex-col md:flex-row gap-4">
       {user && user.role === "ADMIN" && (
         <>
-          <Link
+          {/* <Link
             href="/patrocine"
             prefetch={false}
             className="text-sm font-medium transition-colors hover:text-primary"
           >
             Patrocine
-          </Link>
+          </Link> */}
           <Link
             href="/admin"
             prefetch={false}
@@ -49,13 +49,13 @@ export default async function NavbarLinks() {
       >
         Recompensas
       </Link>
-      <Link
+      {/* <Link
         href="/missoes"
         prefetch={false}
         className="text-sm font-medium transition-colors hover:text-primary"
       >
         Missōes
-      </Link>
+      </Link> */}
     </div>
   );
 }

@@ -35,12 +35,6 @@ export function MainNav({
       >
         Recompensas
       </Link>
-      <Link
-        href="/admin/hemocenters"
-        className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-      >
-        Hemocentros
-      </Link>
     </nav>
   );
 }
