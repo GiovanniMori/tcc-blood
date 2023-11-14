@@ -14,7 +14,10 @@ export default async function Page() {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between">
-        <div className="text-2xl">Seus pontos {donor?.points}</div>
+        <div className="flex gap-2 text-2xl font-bold ">
+          Seus pontos
+          <div className="font-normal">{donor?.points}</div>
+        </div>
         {/* <Button>Filtro</Button> */}
       </div>
       <Separator />
