@@ -1,0 +1,186 @@
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator erd {
+  provider = "prisma-erd-generator"
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+model Hemocenter {
+  id            String          @id @default(uuid())
+  name          String
+  address       String
+  startHour     DateTime        @map("start_hour")
+  endHour       DateTime        @map("end_hour")
+  interval      Int
+  maxCapacity   Int             @map("max_capacity")
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime        @updatedAt @map("updated_at")
+  appointments  Appointment[]
+  workers       User[]
+  BloodDonation BloodDonation[]
+}
+
+enum AppointmentStatus {
+  PENDING
+  ACCEPTED
+  CANCELED
+}
+
+model Appointment {
+  id              String            @id @default(uuid())
+  hemocenter      Hemocenter        @relation(fields: [hemocenterId], references: [id])
+  hemocenterId    String            @map("hemocenter_id")
+  date            DateTime
+  donor           Donor             @relation(fields: [donorUserId], references: [id])
+  donorUserId     String
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+  status          AppointmentStatus @default(PENDING)
+  donation        BloodDonation?    @relation(fields: [bloodDonationId], references: [id])
+  bloodDonationId String?           @unique @map("blood_donation_id")
+
+  @@index([bloodDonationId])
+  @@index([donorUserId])
+  @@index([hemocenterId])
+}
+
+model BloodDonation {
+  id           String       @id @default(uuid())
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+  donor        Donor        @relation(fields: [donorId], references: [id])
+  donorId      String       @map("donor_id")
+  hemocenter   Hemocenter   @relation(fields: [hemocenterId], references: [id])
+  hemocenterId String       @map("hemocenter_id")
+  bloodType    BloodType    @map("blood_type")
+  volume       Float
+  expiration   DateTime
+  verified     Boolean      @default(false)
+  appointment  Appointment?
+
+  @@index([donorId])
+  @@index([hemocenterId])
+}
+
+model User {
+  id           String      @id @unique
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+  email        String      @unique
+  name         String      @db.VarChar(255)
+  role         UserRole    @default(ADMIN)
+  sponsor      Sponsor?
+  donor        Donor?
+  Hemocenter   Hemocenter? @relation(fields: [hemocenterId], references: [id])
+  hemocenterId String?
+
+  @@index([hemocenterId])
+}
+
+model Donor {
+  id               String          @id @map("id")
+  nickname         String          @unique
+  lastDonationDate DateTime?       @map("last_donation_date")
+  cpf              String          @unique
+  points           Int             @default(0)
+  bloodType        BloodType?      @map("blood_type")
+  user             User            @relation(fields: [id], references: [id], onDelete: Cascade)
+  referralBy       String?         @map("referral_by")
+  referralCode     String          @unique @default(uuid()) @map("referral_code")
+  gender           Gender
+  birthDate        DateTime?       @map("birth_date")
+  appointments     Appointment[]
+  vouchers         Voucher[]
+  followers        Follows[]       @relation("following")
+  following        Follows[]       @relation("follower")
+  missions         Mission[]
+  BloodDonation    BloodDonation[]
+
+  @@index([id])
+}
+
+model Follows {
+  follower    Donor  @relation("follower", fields: [followerId], references: [id])
+  followerId  String @map("follower_id")
+  following   Donor  @relation("following", fields: [followingId], references: [id])
+  followingId String @map("following_id")
+
+  @@id([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
+}
+
+model Mission {
+  id          String   @id @default(uuid())
+  name        String
+  description String   @db.LongText()
+  progress    Int
+  level       Int      @default(1)
+  limit       Int
+  lastUpdate  DateTime @updatedAt @map("last_update")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @map("updated_at")
+  donors      Donor[]
+}
+
+model Sponsor {
+  id        String    @id
+  user      User      @relation(fields: [id], references: [id])
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  vouchers  Voucher[]
+
+  @@index([id])
+}
+
+model Reward {
+  id          String    @id @default(uuid())
+  name        String
+  description String    @db.LongText()
+  imageUrl    String?   @map("image_url")
+  points      Int
+  vouchers    Voucher[]
+}
+
+model Voucher {
+  id          String   @id @default(uuid())
+  code        String   @unique
+  generatedAt DateTime @default(now()) @map("generated_at")
+  donor       Donor?   @relation(fields: [reedemedBy], references: [id])
+  reedemedBy  String?  @map("reedemed_by")
+  reward      Reward   @relation(fields: [rewardId], references: [id])
+  rewardId    String   @map("reward_id")
+  sponsor     Sponsor  @relation(fields: [sponsorId], references: [id])
+  sponsorId   String   @map("sponsor_id")
+
+  @@index([sponsorId])
+  @@index([rewardId])
+  @@index([reedemedBy])
+}
+
+enum BloodType {
+  A_POSITIVE
+  A_NEGATIVE
+  B_POSITIVE
+  B_NEGATIVE
+  AB_POSITIVE
+  AB_NEGATIVE
+  O_POSITIVE
+}
